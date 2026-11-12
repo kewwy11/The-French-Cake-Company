@@ -1,0 +1,10 @@
+.metric strong .rolling-number, .metric strong .rolling-number span { max-width: none; font-size: 0; line-height: 0; letter-spacing: 0; }
+.rolling-number { --number-scale: 1; display: inline-block; position: relative; width: calc(var(--number-width) * var(--number-scale)); height: calc(var(--number-height) * var(--number-scale)); }
+.rolling-number-art { position: absolute; inset: 0 auto auto 0; display: flex; width: var(--number-width); height: var(--number-height); transform: scale(var(--number-scale)); transform-origin: top left; }
+.odometer-slot { display: block; flex: 0 0 auto; overflow: hidden; }
+.odometer-reel, .odometer-glyph { display: block; }
+.odometer-row { display: flex; align-items: flex-start; justify-content: center; overflow: hidden; }
+.odometer-glyph { flex: 0 0 auto; background-repeat: no-repeat; }
+.rolling-number[data-settled="true"] .odometer-reel { transform: translateY(var(--roll-end)); }
+@media (max-width: 760px) { .rolling-number { --number-scale: .8; } }
+@media (prefers-reduced-motion: reduce) { .odometer-reel { transform: translateY(var(--roll-end)) !important; } }

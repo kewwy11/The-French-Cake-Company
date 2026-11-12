@@ -1,0 +1,118 @@
+/* Figma frames 140:124, 140:146, 140:186, 140:209 and 140:237. */
+.occasions { padding-top: 48px; padding-bottom: 48px; }
+.occasion-heading { height: 184px; margin: 0; gap: 24px; }
+.occasion-heading .section-eyebrow { margin-top: 0; gap: 10px; font-size: 16px; letter-spacing: -.48px; }
+.occasion-heading .section-eyebrow i, .services-intro .section-eyebrow i, .testimonial-heading .section-eyebrow i, .bakers-heading .section-eyebrow i, .curator-content .section-eyebrow i { width: 10px; height: 10px; flex: 0 0 10px; background: #785345; }
+.occasion-heading .display-heading img { width: 571px; }
+.occasion-grid { gap: 32px 20px; }
+.occasion-image { height: 670px; }
+.occasion-card > span { height: 33px; margin-top: 16px; font-family: 'Manrope', Arial, sans-serif; font-size: 24px; line-height: 33px; font-weight: 400; letter-spacing: 0; }
+
+.cake-curator { align-items: center; }
+.curator-content { height: auto; min-height: 0; padding: 16px 24px; gap: 32px; justify-content: center; }
+.curator-intro { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+.curator-content .section-eyebrow { font-size: 16px; letter-spacing: -.48px; gap: 10px; }
+.curator-title { display: flex; flex-direction: column; gap: 5px; }
+.curator-title .display-heading img { width: 428px; }
+.curator-title p { margin: 0; font-size: 20px; letter-spacing: -.4px; }
+.curator-options { width: 100%; gap: 24px; }
+.curator-options fieldset { display: flex; flex-direction: column; gap: 12px; }
+.curator-options legend { float: left; width: 100%; margin: 0; font-family: Inter, Arial, sans-serif; font-size: 16px; letter-spacing: -.32px; }
+.choice-list { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+.choice { min-height: 60px; padding: 16px; font-family: Inter, Arial, sans-serif; font-size: 16px; letter-spacing: -.32px; border-color: #fff0d7; }
+.curator-footer { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.curator-note { font-size: 16px; line-height: normal; }
+.curator-submit { min-height: 60px; font-size: 14px; }
+
+.services { gap: 32px; }
+.services-intro { display: flex; justify-content: space-between; align-items: start; width: 100%; height: 96px; }
+.services-intro .section-eyebrow { gap: 10px; font-size: 16px; letter-spacing: -.48px; }
+.services-intro .display-heading { margin: 0; }
+.services-intro .display-heading img { width: 506px; max-width: none; }
+.service-list { display: flex; flex-direction: column; gap: 20px; }
+.service-row, .service-row:first-child { border-top: 0; border-bottom: 1px solid #f5e4df; }
+.service-row button { min-height: 126px; padding: 48px 24px; grid-template-columns: 150px minmax(0,1fr) auto; gap: 0; align-items: start; }
+.service-number { font-size: 24px; line-height: normal; color: #000; }
+.service-title { line-height: 1; }
+.service-title img { width: auto; max-height: 42px; }
+.service-action { font-size: 16px; line-height: normal; }
+
+.testimonial-heading { height: 208px; align-items: start; margin: 0; }
+.testimonial-heading .section-eyebrow { gap: 10px; font-size: 16px; letter-spacing: -.48px; }
+.testimonial-heading .display-heading { margin-top: 20px; }
+.testimonial-heading .display-heading img { width: 442px; }
+.testimonial-heading .slider-controls { gap: 16px; }
+.testimonial-heading .round-arrow { display: grid; place-items: center; padding: 0; }
+.testimonial-heading .round-arrow img { display: block; }
+.testimonial-heading .round-arrow.arrow-back, .testimonial-heading .round-arrow.arrow-back:hover { transform: none; }
+.testimonial-heading .round-arrow:not(.arrow-back) img { transform: rotate(180deg); }
+.review-card { background: #35251f; padding: 24px 32px 32px; }
+.review-quote { flex: 1; display: flex; flex-direction: column; align-items: start; justify-content: center; gap: 10px; }
+.quote-mark { display: block; width: 115px; height: 115px; object-fit: contain; }
+.review-quote p { margin: 0 24px; max-width: 530px; font-size: 24px; line-height: normal; text-transform: uppercase; }
+.reviewer { justify-content: flex-end; }
+.review-avatar { width: 70px; height: 70px; }
+.reviewer > div:last-child { gap: 7px; width: 189px; }
+.reviewer b { font-size: 20px; }
+.reviewer span { font-size: 18px; }
+
+.bakers-heading { height: 168px; margin: 0; }
+.bakers-heading .section-eyebrow { gap: 10px; font-size: 16px; letter-spacing: -.48px; }
+.bakers-heading .display-heading img { width: 436px; }
+.baker-gallery { display: block; width: 1300px; overflow: hidden; }
+.baker-track { display: flex; gap: 16px; width: max-content; animation: baker-marquee 36s linear infinite; }
+.baker-card, .baker-card:nth-child(3) { flex: 0 0 458px; width: 458px; }
+.baker-card .site-image { height: 551px; }
+@keyframes baker-marquee { to { transform: translateX(-1896px); } }
+
+@media (max-width: 760px) {
+  .occasions { padding: 24px; }
+  .occasion-heading { height: 113px; flex-direction: row-reverse; }
+  .occasion-heading .section-eyebrow { margin-top: 5px; font-size: 9px; }
+  .occasion-heading .display-heading img { width: 275px; }
+  .occasion-grid { gap: 16px; }
+  .occasion-image { height: 350px; }
+  .occasion-card > span { height: 18px; margin-top: 4px; font-size: 10px; line-height: 18px; }
+  .cake-curator { align-items: stretch; }
+  .curator-content { padding: 0; gap: 20px; }
+  .curator-intro { gap: 14px; }
+  .curator-content .section-eyebrow { display: none; }
+  .curator-title .display-heading img { width: 340px; }
+  .curator-title p { font-size: 12px; }
+  .curator-options { gap: 20px; }
+  .curator-options legend { font-size: 10px; }
+  .choice-list { gap: 8px; }
+  .choice { min-height: 42px; padding: 6px; font-size: 10px; }
+  .curator-note { font-size: 10px; }
+  .curator-submit { min-height: 52px; font-size: 10px; }
+  .services { gap: 0; }
+  .services-intro { height: 128px; display: block; }
+  .services-intro .section-eyebrow { font-size: 9px; }
+  .services-intro .display-heading { margin-top: 14px; }
+  .services-intro .display-heading img { width: 290px; max-width: 100%; }
+  .service-list { gap: 0; }
+  .service-row button { min-height: 74px; padding: 20px 0; grid-template-columns: 28px minmax(0,1fr) auto; }
+  .service-number, .service-action { font-size: 12px; }
+  .service-title img { max-height: 27px; }
+  .testimonial-heading { height: 141px; }
+  .testimonial-heading .section-eyebrow { font-size: 9px; }
+  .testimonial-heading .display-heading { margin-top: 14px; }
+  .testimonial-heading .display-heading img { width: 253px; }
+  .testimonial-heading .slider-controls { gap: 8px; }
+  .review-card { padding: 24px 24px; }
+  .quote-mark { width: 58px; height: 58px; }
+  .review-quote p { margin: 0; font-size: 12px; line-height: 1.4; }
+  .review-avatar { width: 40px; height: 40px; }
+  .reviewer > div:last-child { width: auto; gap: 4px; }
+  .reviewer b { font-size: 10px; }
+  .reviewer span { font-size: 9px; }
+  .bakers-heading { height: 137px; }
+  .bakers-heading .section-eyebrow { font-size: 9px; }
+  .bakers-heading .display-heading img { width: 277px; }
+  .baker-gallery { width: calc(100vw - 24px); }
+  .baker-track { gap: 8px; animation-name: baker-marquee-mobile; }
+  .baker-card, .baker-card:nth-child(3) { flex-basis: 325px; width: 325px; }
+  .baker-card .site-image { height: 437px; }
+  @keyframes baker-marquee-mobile { to { transform: translateX(-1332px); } }
+}
+@media (prefers-reduced-motion: reduce) { .baker-track { animation: none; } }

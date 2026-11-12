@@ -1,0 +1,60 @@
+/* Consistent section rhythm. */
+.best-sellers, .brand-story, .occasions, .cake-curator, .services,
+.testimonial, .bakers, .faq-newsletter, .site-footer {
+  height: auto; min-height: 0; padding-top: 64px; padding-bottom: 64px; margin-top: 0;
+}
+
+/* A slide keeps the same linear zoom when it becomes the outgoing slide.
+   Only the incoming layer fades; the outgoing layer stays opaque underneath. */
+.hero-slide { opacity: 0; z-index: -2; transition: none; pointer-events: none; }
+.hero-slide.is-active { opacity: 1; z-index: -1; transition: opacity 1600ms linear; }
+.hero-slide.is-previous { opacity: 1; transition: none; }
+.hero-slide img { transform: scale(1); transition: none; }
+.hero-slide.is-active img, .hero-slide.is-previous img { animation: hero-continuous-zoom 6800ms linear both; }
+.hero:not(.is-revealed) .hero-slide img { animation-play-state: paused; }
+@keyframes hero-continuous-zoom { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+/* Each line rises inside its own mask without changing the Figma layout. */
+.hero-copy { top: 297px; }
+.hero .hero-copy, .hero .site-header { opacity: 1; visibility: visible; }
+.hero .site-header > * { opacity: 0; transform: translateY(18px); transition: transform 1100ms cubic-bezier(.22,1,.36,1), opacity 900ms ease; }
+.hero.is-revealed .site-header > * { opacity: 1; transform: translateY(0); }
+.hero-reveal { overflow: hidden; }
+.hero-reveal > * { transform: translateY(115%); opacity: .3; transition: transform 1300ms cubic-bezier(.22,1,.36,1), opacity 1100ms ease; transition-delay: var(--reveal-delay); }
+.hero.is-revealed .hero-reveal > * { transform: translateY(0); opacity: 1; }
+.hero-reveal-kicker { --reveal-delay: 80ms; }
+.hero-reveal-title { --reveal-delay: 220ms; margin-top: 20px; }
+.hero .hero-reveal-title .display-heading { margin: 0; }
+.hero-reveal-script { --reveal-delay: 370ms; margin-top: 20px; }
+.hero-kicker { text-transform: none; }
+.hero .hero-script { margin: 0; height: 58px; }
+.hero-script picture { height: 58px; align-items: center; }
+.hero .hero-script img { width: 235.26px; height: 60px; }
+.hero-reveal-actions { --reveal-delay: 520ms; margin-top: 24px; }
+.hero .hero-actions { margin: 0; }
+.hero-pagination { position: absolute; right: 70px; bottom: 70px; display: flex; gap: 5px; z-index: 3; opacity: 0; transform: translateY(10px); transition: opacity 1000ms ease 700ms, transform 1200ms cubic-bezier(.22,1,.36,1) 700ms; }
+.hero.is-revealed .hero-pagination { opacity: 1; transform: translateY(0); }
+.hero-pagination button { width: 40px; height: 20px; padding: 8px 0; border: 0; background: transparent; cursor: pointer; }
+.hero-pagination button::after { content: ''; display: block; height: 3px; border-radius: 3px; width: 100%; background: #d9d9d9; transition: background 500ms ease; }
+.hero-pagination button[aria-current="true"]::after { background: var(--paper); }
+.hero-pagination button:focus-visible { outline: 1px solid var(--paper); outline-offset: 3px; }
+.hero .scroll-cue, .hero .hero-dots { display: none; }
+@media (max-width: 760px) {
+  .best-sellers-intro .slider-controls { top: 107px; }
+  .hero-copy { top: 216.5px; }
+  .hero-reveal-title { margin-top: 10px; }
+  .hero-reveal-script { margin-top: 0; }
+  .hero .hero-script, .hero-script picture { height: 35px; }
+  .hero .hero-script img { width: auto; height: 35px; }
+  .hero-reveal-actions { position: absolute; top: 323.5px; left: 0; right: 0; margin: 0; }
+  .hero .hero-actions { position: static; }
+  .hero-pagination { right: 20px; bottom: 21px; }
+  .hero-pagination button { width: 24px; }
+  .testimonial-content { margin-bottom: 86px; }
+  .testimonial-heading .slider-controls { bottom: 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide, .hero-slide img, .hero .site-header > *, .hero-reveal > *, .hero-pagination { animation: none !important; transition: none; }
+  .hero-slide img { transform: none; }
+  .hero.is-revealed .hero-reveal > *, .hero.is-revealed .site-header > * { transform: none; opacity: 1; }
+}

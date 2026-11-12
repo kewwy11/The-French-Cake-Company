@@ -1,0 +1,120 @@
+/* Final Figma alignment and viewport containment. */
+html { overflow-x: clip; scrollbar-gutter: stable; }
+body, #root { width: 100%; min-width: 320px; overflow-x: clip; }
+.section-wrap, .site-footer { min-width: 0; }
+.display-heading, .display-heading picture { max-width: 100%; }
+
+.brand-story { grid-template-columns: 105px minmax(0, 1fr); gap: clamp(32px, 13.55vw, 195px); }
+.story-copy { min-width: 0; }
+.best-sellers { grid-template-columns: minmax(0,464px) minmax(0,816px); }
+.best-sellers-track { max-width: 100%; }
+.cake-curator { grid-template-columns: minmax(0,616px) minmax(0,664px); }
+.curator-content, .curator-photo { min-width: 0; }
+.choice { white-space: nowrap; }
+.testimonial-heading { height: 184px; margin-bottom: 24px; align-items: center; }
+.testimonial-content { width: 100%; grid-template-columns: repeat(2,minmax(0,1fr)); }
+.review-card, .testimonial-photo { width: 100%; min-width: 0; }
+.review-avatar { flex: 0 0 70px; }
+.bakers { overflow: clip; }
+.baker-gallery { width: 100%; max-width: 1300px; overflow: hidden; }
+
+.faq-newsletter { grid-template-columns: minmax(0,680px) minmax(0,600px); align-items: center; }
+.faq-block { height: 605px; min-width: 0; padding: 32px 48px 32px 0; }
+.faq-block .section-eyebrow, .newsletter .section-eyebrow { gap: 10px; font-size: 16px; letter-spacing: -.48px; }
+.faq-block .section-eyebrow i, .newsletter .section-eyebrow i { width: 10px; height: 10px; flex: 0 0 10px; }
+.faq-block .display-heading { height: 72px; margin: 20px 0 49px; }
+.faq-block .display-heading img { width: 569px; max-width: 100%; }
+.faq-list { display: flex; flex-direction: column; gap: 10px; }
+.faq-item:first-child { border-top: 0; }
+.faq-item { border-color: #decfc3; }
+.faq-item button { min-height: 70px; padding: 24px 0; font-size: 16px; font-weight: 400; line-height: 22px; white-space: nowrap; }
+.faq-item button span { min-width: 0; }
+.faq-item button b { flex: 0 0 auto; font-family: Inter, Arial, sans-serif; font-size: 32px; font-weight: 400; }
+.newsletter { height: 605px; min-height: 0; padding: 48px; justify-content: flex-start; gap: 32px; }
+.newsletter-body { display: flex; flex: 1; flex-direction: column; justify-content: flex-end; gap: 64px; min-height: 0; width: 100%; }
+.newsletter-copy { display: flex; flex-direction: column; gap: 10px; }
+.newsletter .display-heading { margin: 0; }
+.newsletter .display-heading img { width: 455px; max-width: 100%; }
+.newsletter-copy p { max-width: 438px; margin: 0; color: #eac7c2; font-size: 16px; line-height: normal; }
+.newsletter form { gap: 16px; }
+.newsletter input { min-height: 60px; font-size: 16px; }
+.newsletter .button { min-height: 60px; font-size: 14px; background: #f5e4df; }
+
+.site-footer { overflow: clip; }
+.footer-photo { width: 100%; max-width: 1300px; height: 323px; margin: 0 auto 43px; }
+.footer-main { display: grid; grid-template-columns: minmax(0,1fr) 476px; gap: 48px; width: 100%; max-width: 1300px; height: 290px; min-height: 0; margin: 0 auto; padding: 0; }
+.footer-wordmark .display-heading img { width: 286px; }
+.footer-brand p { max-width: 321px; margin: 16px 0 0; color: #eac7c2; font-size: 22px; font-weight: 300; line-height: normal; }
+.footer-links { display: grid; grid-template-columns: 170px minmax(0,1fr) 125px; gap: 16px; }
+.footer-column { gap: 0; }
+.footer-column h3 { margin: 0 0 24px; color: #f5e4df; font-size: 16px; font-weight: 500; }
+.footer-column a { margin-bottom: 16px; color: #fffcf7; font-size: 16px; font-weight: 300; white-space: nowrap; }
+.footer-bottom { width: 100%; max-width: 1300px; min-height: 68px; margin: 0 auto; padding: 24px 16px 0; align-items: flex-start; border-color: #785345; font-size: 14px; letter-spacing: 0; }
+.footer-language { display: none; }
+
+@media (min-width: 761px) and (max-width: 1399px) {
+  .section-wrap { padding-inline: clamp(28px,5vw,70px); }
+  .brand-story { height: auto; min-height: 316px; }
+  .story-copy p { font-size: clamp(22px,2.22vw,32px); }
+  .best-sellers { grid-template-columns: minmax(0,36%) minmax(0,1fr); }
+  .best-sellers-track { width: 100%; }
+  .cake-curator { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+  .curator-content { padding-inline: clamp(12px,2vw,24px); }
+  .curator-title p { font-size: clamp(14px,1.4vw,20px); white-space: normal; }
+  .choice { padding-inline: 4px; font-size: clamp(9px,1vw,16px); }
+  .services-intro .display-heading img { max-width: min(506px,52vw); }
+  .service-row button { grid-template-columns: clamp(55px,10vw,150px) minmax(0,1fr) auto; }
+  .testimonial-content { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .review-quote p { font-size: clamp(16px,1.67vw,24px); }
+  .faq-newsletter { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .faq-block { padding-right: clamp(18px,3vw,48px); }
+  .faq-item button { font-size: clamp(10px,1.1vw,16px); }
+  .newsletter { padding: clamp(24px,3.3vw,48px); }
+  .site-footer { padding-inline: clamp(28px,5vw,70px); }
+  .footer-main { grid-template-columns: minmax(0,1fr) minmax(0,476px); gap: 24px; }
+  .footer-links { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .footer-column h3, .footer-column a { font-size: clamp(10px,1.1vw,16px); }
+}
+
+@media (max-width: 760px) {
+  html { scrollbar-gutter: auto; }
+  .brand-story { height: auto; min-height: 380px; }
+  .brand-story { gap: 16px; }
+  .best-sellers-track { width: 100%; }
+  .occasion-heading .section-eyebrow { white-space: nowrap; }
+  .cake-curator { height: auto; min-height: 964px; grid-template-columns: minmax(0,1fr); }
+  .curator-options .choice { padding-inline: 2px; font-size: clamp(7px,2.3vw,10px); }
+  .services { height: auto; min-height: 401px; }
+  .testimonial { height: auto; min-height: 1010px; }
+  .testimonial-heading { height: 141px; margin-bottom: 0; align-items: start; }
+  .testimonial-content { display: flex; flex-direction: column; }
+  .review-card, .testimonial-photo { width: 100%; }
+  .review-avatar { flex-basis: 40px; }
+  .bakers { height: auto; min-height: 630px; }
+  .baker-gallery { width: 100%; max-width: none; }
+  .faq-newsletter { height: auto; min-height: 968px; display: flex; flex-direction: column; align-items: stretch; padding: 30px 24px; gap: 16px; }
+  .faq-block { height: 434px; padding: 0; }
+  .faq-block .section-eyebrow, .newsletter .section-eyebrow { font-size: 9px; }
+  .faq-block .display-heading { height: auto; margin: 18px 0 35px; }
+  .faq-block .display-heading img { width: 325px; }
+  .faq-list { gap: 0; }
+  .faq-item button { min-height: 65px; padding: 17px 0; font-size: clamp(7px,2.4vw,10px); }
+  .faq-item button b { font-size: 18px; }
+  .newsletter { height: 454px; min-height: 0; padding: 26px 20px; gap: 0; }
+  .newsletter-body { gap: 26px; }
+  .newsletter .display-heading img { width: 294px; }
+  .newsletter-copy p { font-size: 11px; }
+  .newsletter form { gap: 10px; }
+  .newsletter input, .newsletter .button { min-height: 48px; font-size: 10px; }
+  .site-footer { height: auto; min-height: 1032px; padding: 32px 24px 24px; }
+  .footer-photo { height: 180px; margin-bottom: 32px; }
+  .footer-main { display: flex; flex-direction: column; gap: 32px; height: auto; min-height: 690px; }
+  .footer-wordmark .display-heading img { width: 215px; }
+  .footer-brand p { font-size: 11px; }
+  .footer-links { width: 100%; min-width: 0; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+  .footer-column h3, .footer-column a { font-size: 9px; white-space: normal; }
+  .footer-column h3 { margin-bottom: 16px; }
+  .footer-column a { margin-bottom: 10px; }
+  .footer-bottom { display: flex; flex-wrap: wrap; font-size: 7px; }
+  .footer-language { display: inline; }
+}

@@ -1,0 +1,24 @@
+.hero-actions .hero-button { gap: 0; font-family: Inter, Arial, sans-serif; font-weight: 400; white-space: nowrap; }
+.hero-actions .hero-button.button-dark, .hero-actions .hero-button.button-dark:hover { background: var(--brown); color: white; }
+.hero-actions .hero-button.button-light, .hero-actions .hero-button.button-light:hover { background: var(--paper); color: var(--brown); }
+.hero-button-label { display: block; }
+.hero-button-arrow-clip { display: block; flex: 0 0 auto; width: 0; height: 19.799px; overflow: hidden; transition: width 320ms cubic-bezier(.22,1,.36,1); }
+.hero-button-arrow { margin-left: 10px; width: 19.799px; height: 19.799px; display: grid; place-items: center; opacity: 0; transform: translateX(-22px) rotate(45deg); }
+.hero-button-arrow img { display: block; }
+.hero-button:is(:hover, :focus-visible) .hero-button-arrow-clip { width: 29.799px; }
+.hero-button:is(:hover, :focus-visible) .hero-button-arrow { animation: button-arrow-arrive 480ms forwards; }
+.hero-button:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+@keyframes button-arrow-arrive {
+  0% { opacity: 0; transform: translateX(-22px) rotate(45deg); animation-timing-function: cubic-bezier(.22,1,.36,1); }
+  45%, 55% { opacity: 1; transform: translateX(0) rotate(45deg); animation-timing-function: cubic-bezier(.4,0,.2,1); }
+  100% { opacity: 1; transform: translateX(0) rotate(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-button-arrow-clip { transition: none; }
+  .hero-button:is(:hover, :focus-visible) .hero-button-arrow { animation: none; opacity: 1; transform: none; }
+}
+
+.hero-button-label { --button-label-scale: 1; position: relative; width: calc(var(--button-label-width) * var(--button-label-scale)); height: calc(17px * var(--button-label-scale)); }
+.hero-button-label-art { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: var(--button-label-width); height: 17px; transform: translate(-50%, -50%) scale(var(--button-label-scale)); }
+.hero-button-label-art img { display: block; }
+@media (max-width: 760px) { .hero-button-label { --button-label-scale: .857142857; } }
