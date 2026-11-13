@@ -1,0 +1,55 @@
+/* A preview opens from the middle of its service row and stays attached to it. */
+.service-row { position: relative; }
+.service-row.is-preview { z-index: 4; }
+.service-row-heading { display: flex; align-items: center; gap: 24px; min-height: 126px; padding: 48px 24px; }
+.service-row .service-preview-trigger { flex: 1; min-width: 0; width: auto; min-height: 0; padding: 0; grid-template-columns: 150px minmax(0,1fr); align-items: center; }
+.service-action { flex: 0 0 auto; color: var(--brown-light); }
+.service-action, .service-discover { cursor: pointer; }
+.service-preview { position: absolute; top: 50%; right: 90px; width: 307px; max-width: calc(100% - 48px); z-index: 5; opacity: 0; pointer-events: none; transform: translateY(-50%) scale(.94); clip-path: inset(45% 0 45% 0); transform-origin: center; transition: clip-path 550ms cubic-bezier(.4,0,.2,1), transform 550ms cubic-bezier(.4,0,.2,1), opacity 400ms ease-in-out; }
+.service-row.is-preview .service-preview { opacity: 1; pointer-events: auto; clip-path: inset(0); transform: translateY(-50%) scale(1); }
+.service-row:first-child .service-preview { top: 0; transform: scale(.94); transform-origin: center 63px; clip-path: inset(0 0 90% 0); }
+.service-row:last-child .service-preview { top: auto; bottom: 0; transform: scale(.94); transform-origin: center calc(100% - 63px); clip-path: inset(90% 0 0 0); }
+.service-row:is(:first-child, :last-child).is-preview .service-preview { transform: scale(1); clip-path: inset(0); }
+.service-preview-card { display: flex; flex-direction: column; gap: 10px; padding: 16px; background: var(--rose); color: var(--brown-light); }
+.service-preview-clip { min-height: 0; overflow: hidden; }
+.service-preview-card > .site-image { width: 100%; height: 243px; }
+.service-preview-card > p { margin: 0; font-size: 15px; line-height: 1.5; white-space: normal; }
+.service-discover { display: inline-flex; align-items: center; align-self: flex-start; gap: 2px; margin-top: 6px; font-size: 14px; line-height: 1.5; text-transform: uppercase; }
+.service-preview-trigger:focus-visible, .service-action:focus-visible, .service-discover:focus-visible { outline: 2px solid var(--brown-light); outline-offset: 5px; }
+
+/* Only the reveal mask moves. Both complete panels stay rigid in their slots. */
+.testimonial-stage { display: grid; position: relative; isolation: isolate; width: 100%; }
+.testimonial-stage > .testimonial-content { grid-area: 1 / 1; margin: 0; visibility: hidden; pointer-events: none; }
+.testimonial-stage > .is-current, .testimonial-stage > .is-outgoing { visibility: visible; }
+.testimonial-stage > .is-outgoing { z-index: 1; }
+.testimonial-stage > .is-current { z-index: 2; pointer-events: auto; }
+.testimonial-stage > .is-entering { mask-size: 240% 100%; mask-repeat: no-repeat; animation: testimonial-sweep 850ms cubic-bezier(.4,0,.2,1) both; }
+.sweep-from-left { --sweep-start: 100% 0%; --sweep-end: 0% 0%; mask-image: linear-gradient(to right, #000 45%, transparent 55%); }
+.sweep-from-right { --sweep-start: 0% 0%; --sweep-end: 100% 0%; mask-image: linear-gradient(to right, transparent 45%, #000 55%); }
+.testimonial-stage > .testimonial-content:not(.is-entering) { mask-image: none; }
+@keyframes testimonial-sweep { from { mask-position: var(--sweep-start); } to { mask-position: var(--sweep-end); } }
+.baker-track { animation: none; will-change: transform; }
+.baker-card { position: relative; scroll-snap-align: none; }
+.baker-gallery { scroll-snap-type: none; }
+
+@media (min-width: 761px) and (max-width: 1399px) {
+  .service-row .service-preview-trigger { grid-template-columns: clamp(55px,10vw,150px) minmax(0,1fr); }
+}
+@media (max-width: 760px) {
+  .service-row-heading { min-height: 74px; padding: 20px 0; gap: 12px; }
+  .service-row .service-preview-trigger { grid-template-columns: 28px minmax(0,1fr); }
+  .service-row .service-preview,
+  .service-row.is-preview .service-preview,
+  .service-row:is(:first-child, :last-child) .service-preview,
+  .service-row:is(:first-child, :last-child).is-preview .service-preview { position: static; display: grid; grid-template-rows: 0fr; width: 307px; max-width: 100%; margin-left: auto; margin-bottom: 0; transform: none; clip-path: none; transition: grid-template-rows 550ms cubic-bezier(.4,0,.2,1), opacity 400ms ease-in-out, margin-bottom 550ms cubic-bezier(.4,0,.2,1); }
+  .service-row.is-preview .service-preview,
+  .service-row:is(:first-child, :last-child).is-preview .service-preview { grid-template-rows: 1fr; margin-bottom: 20px; }
+  .testimonial-stage { margin-bottom: 86px; }
+  .baker-track { animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-preview { transition: none !important; }
+  .testimonial-stage > .is-entering { animation: none; mask-image: none; }
+  .baker-track { animation: none; will-change: auto; }
+  .baker-gallery { overflow-x: auto; scrollbar-width: thin; }
+}

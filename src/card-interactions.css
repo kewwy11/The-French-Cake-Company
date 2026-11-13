@@ -1,0 +1,63 @@
+/* The viewport clips a rigid, evenly spaced track; only its x position springs. */
+.best-sellers-viewport { min-width: 0; width: 100%; height: 551px; overflow: hidden; touch-action: pan-y pinch-zoom; }
+.best-sellers-track { width: 100%; max-width: none; height: 100%; overflow: visible; scroll-snap-type: none; will-change: transform; }
+.best-card, .best-card:nth-child(2) { background: var(--rose); scroll-snap-align: none; }
+.best-card > .site-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: top 650ms cubic-bezier(.22,1,.36,1), left 650ms cubic-bezier(.22,1,.36,1), width 650ms cubic-bezier(.22,1,.36,1), height 650ms cubic-bezier(.22,1,.36,1); }
+.best-card.is-revealed > .site-image { top: 11.2523%; left: 22.0524%; width: 55.8952%; height: 55.8984%; }
+.best-card-details { position: absolute; top: 71.5064%; left: 8%; width: 84%; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; visibility: hidden; transform: translateY(12px); transition: opacity 320ms ease, transform 500ms cubic-bezier(.22,1,.36,1), visibility 0s 500ms; }
+.best-card-details p { margin: 0; font-size: 14px; line-height: 1.35; text-align: center; text-transform: uppercase; }
+.best-card.is-revealed .best-card-details { opacity: 1; visibility: visible; transform: none; transition-delay: 130ms, 130ms, 0s; }
+.collection-link, .occasion-cta { width: 211px; max-width: 100%; min-height: 50px; padding: 0 16px; gap: 4px; font-size: 14px; letter-spacing: -.03em; white-space: nowrap; }
+.best-card:focus-visible { outline: 2px solid var(--brown); outline-offset: -3px; }
+
+/* Keep the existing crop and interpolate its frame into the inset variant. */
+.occasion-visual { position: relative; height: 670px; overflow: hidden; background: var(--rose); container-type: inline-size; --occasion-inset-size: min(364px, 56.875cqw); --occasion-gap: 40px; --occasion-cta-height: 50px; }
+.occasion-visual .occasion-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; aspect-ratio: auto; filter: none; transition: top 650ms cubic-bezier(.22,1,.36,1), left 650ms cubic-bezier(.22,1,.36,1), width 650ms cubic-bezier(.22,1,.36,1), height 650ms cubic-bezier(.22,1,.36,1); }
+.occasion-card:is(:hover, :focus-visible) .occasion-image { top: calc((100% - var(--occasion-inset-size) - var(--occasion-gap) - var(--occasion-cta-height)) / 2); left: calc((100% - var(--occasion-inset-size)) / 2); width: var(--occasion-inset-size); height: var(--occasion-inset-size); filter: none; }
+.occasion-cta { position: absolute; top: calc((100% + var(--occasion-inset-size) + var(--occasion-gap) - var(--occasion-cta-height)) / 2); left: 50%; transform: translate(-50%,12px); opacity: 0; transition: opacity 300ms ease, transform 500ms cubic-bezier(.22,1,.36,1); }
+.occasion-card:is(:hover, :focus-visible) .occasion-cta { opacity: 1; transform: translate(-50%,0); transition-delay: 130ms; }
+.occasion-card:focus-visible { outline: 2px solid var(--brown); outline-offset: 5px; }
+
+.story-word { display: inline-block; color: color-mix(in srgb, var(--story-final, #3b1f14) var(--line-reveal, 0%), #a26a2c); }
+.story-lead { --story-final: #ababab; }
+
+/* A duplicated line rolls through a mask, like the face of an odometer. */
+.rolling-label { position: relative; display: inline-grid; vertical-align: middle; overflow: hidden; line-height: 1.5; }
+.rolling-label-main, .rolling-label-copy { grid-area: 1 / 1; display: block; transition: transform 500ms cubic-bezier(.45,0,.55,1); }
+.rolling-label-copy { transform: translateY(100%); pointer-events: none; }
+:is(button, a.button, .occasion-card, .service-action, .service-discover):is(:hover, :focus-visible) .rolling-label-main { transform: translateY(-100%); }
+:is(button, a.button, .occasion-card, .service-action, .service-discover):is(:hover, :focus-visible) .rolling-label-copy { transform: translateY(0); }
+.hero-button-label-art.rolling-label { display: grid; }
+.hero-button-label-art .rolling-label-main, .hero-button-label-art .rolling-label-copy { height: 17px; }
+.rolling-arrow { position: relative; display: inline-grid; flex: 0 0 19.799px; width: 19.799px; height: 19.799px; overflow: hidden; }
+.rolling-arrow img { grid-area: 1 / 1; align-self: center; justify-self: center; transition: transform 500ms cubic-bezier(.45,0,.55,1); }
+.rolling-arrow img + img { transform: translate(-21px,21px); }
+:is(button, a.button, .occasion-card, .service-action, .service-discover):is(:hover, :focus-visible) .rolling-arrow img:first-child { transform: translate(21px,-21px); }
+:is(button, a.button, .occasion-card, .service-action, .service-discover):is(:hover, :focus-visible) .rolling-arrow img + img { transform: none; }
+.round-arrow img { transition: translate 500ms cubic-bezier(.45,0,.55,1); }
+.round-arrow:is(:hover, :focus-visible) img { translate: 4px 0; }
+.round-arrow.arrow-back:is(:hover, :focus-visible) img { translate: -4px 0; }
+.round-arrow:not(.arrow-back) { --chevron-rotation: 180deg; --chevron-direction: -1; }
+.round-arrow.arrow-back { --chevron-rotation: 0deg; --chevron-direction: 1; }
+.button-symbol { transition: transform 500ms cubic-bezier(.45,0,.55,1); }
+button:is(:hover, :focus-visible) .button-symbol { transform: rotate(90deg); }
+.choice { transition: background 200ms ease, border-color 200ms ease; }
+.choice:focus-visible, .button:focus-visible { outline: 2px solid var(--brown-light); outline-offset: 3px; }
+
+@media (max-width: 760px) {
+  .best-sellers-viewport { height: 437px; flex: 0 0 437px; }
+  .best-card-details { gap: 8px; }
+  .collection-link, .occasion-cta { width: 170px; font-size: 10px; min-height: 42px; padding-inline: 12px; }
+  .occasion-visual { height: 350px; --occasion-gap: 20px; --occasion-cta-height: 42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .best-sellers-track { will-change: auto; }
+  .best-card > .site-image, .best-card-details, .occasion-visual .occasion-image, .occasion-cta,
+  .rolling-label-main, .rolling-label-copy, .rolling-arrow img, .button-symbol, .choice { transition: none; }
+  .round-arrow:is(:hover, :focus-visible) img { animation: none; translate: none; transition: none; }
+  :is(button, a.button, .occasion-card, .service-action, .service-discover):is(:hover, :focus-visible) .rolling-label-main,
+  :is(button, a.button, .occasion-card, .service-action, .service-discover):is(:hover, :focus-visible) .rolling-arrow img:first-child { transform: none; }
+  .rolling-label-copy, .rolling-arrow img + img { display: none; }
+  button:is(:hover, :focus-visible) .button-symbol { transform: none; }
+}
