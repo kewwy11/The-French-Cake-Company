@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { heroSlides, HERO_INTERVAL } from '../hero-slides.js';
+import { useState } from 'react';
+import { heroSlides } from '../hero-slides.js';
+import useImageCycle from '../hooks/useImageCycle.js';
 import SiteImage from './SiteImage.jsx';
 import DisplayHeading from './DisplayHeading.jsx';
 import HeroButton from './HeroButton.jsx';
@@ -12,33 +13,9 @@ const links = [
 ];
 
 export default function Hero({ isRevealed = true }) {
-  const hero = useRef(null);
-  const [{ active, previous }, setSlide] = useState({ active: 0, previous: null });
-  const [reducedMotion, setReducedMotion] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
-  const selectSlide = (index) => setSlide(current => current.active === index ? current : { active: index, previous: current.active });
-  useEffect(() => {
-    const media = matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReducedMotion(media.matches);
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, []);
-  useEffect(() => {
-    if (!isRevealed || reducedMotion) return;
-    let timer;
-    const schedule = () => {
-      clearTimeout(timer);
-      if (document.hidden) return;
-      timer = setTimeout(() => {
-        if (hero.current?.getBoundingClientRect().bottom > 0) selectSlide((active + 1) % heroSlides.length);
-        else schedule();
-      }, HERO_INTERVAL);
-    };
-    schedule();
-    document.addEventListener('visibilitychange', schedule);
-    return () => { clearTimeout(timer); document.removeEventListener('visibilitychange', schedule); };
-  }, [isRevealed, reducedMotion, active]);
+  const { ref: hero, active, previous, selectSlide, running } = useImageCycle(heroSlides.length, isRevealed);
   const [menuOpen, setMenuOpen] = useState(false);
-  return <section ref={hero} className={"hero " + (isRevealed ? "is-revealed" : "")} id="top" aria-label="The French Cake Company">
+  return <section ref={hero} className={"hero " + (isRevealed ? "is-revealed" : "") + (running ? '' : ' is-cycle-paused')} id="top" aria-label="The French Cake Company">
     {heroSlides.map((slide, index) => <SiteImage key={slide.src} {...slide} className={"hero-photo hero-slide" + (index === active ? " is-active" : "") + (index === previous ? " is-previous" : "")} loading="eager" />)}
     <div className="hero-shade" />
     <header className="site-header">

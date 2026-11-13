@@ -6,6 +6,7 @@ import Metrics from './components/Metrics.jsx';
 import BestSellers from './components/BestSellers.jsx';
 import BrandStory from './components/BrandStory.jsx';
 import Occasions from './components/Occasions.jsx';
+import NewestReleases from './components/NewestReleases.jsx';
 import CakeCurator from './components/CakeCurator.jsx';
 import Services from './components/Services.jsx';
 import Testimonial from './components/Testimonial.jsx';
@@ -21,7 +22,7 @@ export default function App() {
     <div className="page-shell" inert={!ready} aria-hidden={!ready}>
     <AnnouncementBar /><Hero isRevealed={ready} />
     <main>
-      <Metrics enabled={ready} /><BestSellers /><BrandStory /><Occasions /><CakeCurator />
+      <Metrics enabled={ready} /><BestSellers /><BrandStory /><Occasions /><NewestReleases /><CakeCurator />
       <Services /><Testimonial /><Bakers /><FAQNewsletter />
     </main>
     <Footer />

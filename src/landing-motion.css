@@ -9,9 +9,11 @@
 .hero-slide { opacity: 0; z-index: -2; transition: none; pointer-events: none; }
 .hero-slide.is-active { opacity: 1; z-index: -1; transition: opacity 1600ms linear; }
 .hero-slide.is-previous { opacity: 1; transition: none; }
-.hero-slide img { transform: scale(1); transition: none; }
-.hero-slide.is-active img, .hero-slide.is-previous img { animation: hero-continuous-zoom 6800ms linear both; }
-.hero:not(.is-revealed) .hero-slide img { animation-play-state: paused; }
+.hero-slide img, .image-cycle-photo img { transform: scale(1); transition: none; }
+.hero-slide.is-active img, .hero-slide.is-previous img,
+.image-cycle-layer.is-active img, .image-cycle-layer.is-previous img { animation: hero-continuous-zoom 6800ms linear both; }
+.hero:not(.is-revealed) .hero-slide img, .hero.is-cycle-paused .hero-slide img,
+.image-cycle.is-cycle-paused .image-cycle-photo img { animation-play-state: paused; }
 @keyframes hero-continuous-zoom { from { transform: scale(1); } to { transform: scale(1.1); } }
 
 /* Each line rises inside its own mask without changing the Figma layout. */
@@ -54,7 +56,7 @@
   .testimonial-heading .slider-controls { bottom: 64px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-slide, .hero-slide img, .hero .site-header > *, .hero-reveal > *, .hero-pagination { animation: none !important; transition: none; }
-  .hero-slide img { transform: none; }
+  .hero-slide, .hero-slide img, .image-cycle-layer, .image-cycle-photo img, .hero .site-header > *, .hero-reveal > *, .hero-pagination { animation: none !important; transition: none; }
+  .hero-slide img, .image-cycle-photo img { transform: none; }
   .hero.is-revealed .hero-reveal > *, .hero.is-revealed .site-header > * { transform: none; opacity: 1; }
 }

@@ -15,7 +15,7 @@ export default function FAQNewsletter() {
   return <section className="faq-newsletter section-wrap" id="faq">
     <div className="faq-block"><div className="section-eyebrow"><i />Good to know</div><DisplayHeading name="faq">A few tasty answers.</DisplayHeading>
       <div className="faq-list">{questions.map(([question, answer], i) => <article className="faq-item" key={question + i}>
-        <button aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)}><RollingLabel>{question}</RollingLabel><b className="button-symbol">{open === i ? '−' : '+'}</b></button>
+        <button aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)}><RollingLabel>{question}</RollingLabel><b className="button-symbol" aria-hidden="true">{open === i ? '−' : '+'}</b></button>
         {open === i && <p>{answer}</p>}
       </article>)}</div>
     </div>

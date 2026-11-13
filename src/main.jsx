@@ -14,3 +14,4 @@ createRoot(document.getElementById('root')).render(
 import './landing-motion.css';
 import './card-interactions.css';
 import './service-testimonial-motion.css';
+import './updated-landing.css';
