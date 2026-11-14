@@ -17,8 +17,18 @@ export default function useAutoplay({ ref, delay, onAdvance, resetKey, enabled =
   const running = enabled && visible && pageVisible && !reduced;
   useEffect(() => {
     if (!running) return;
-    const timer = setTimeout(() => advance.current(), delay);
-    return () => clearTimeout(timer);
+    let timer;
+    let cancelled = false;
+    const schedule = () => {
+      timer = setTimeout(() => {
+        advance.current();
+        // Keep scheduling even when an advance is deferred by an interaction.
+        // A state change restarts this clock through resetKey.
+        if (!cancelled) schedule();
+      }, delay);
+    };
+    schedule();
+    return () => { cancelled = true; clearTimeout(timer); };
   }, [running, delay, resetKey]);
   return running;
 }

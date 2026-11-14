@@ -3,10 +3,10 @@ import DisplayHeading from './DisplayHeading.jsx';
 const explore = ['Cakes', 'Custom orders', 'Wedding cakes', 'Birthdays', 'Corporate cake'];
 const information = ['Our story', 'FAQ', 'Delivery', 'Contact'];
 const slides = [
-  { src: '/assets/footer-slide-cakes.png', alt: 'Layer cakes on stands in the atelier' },
-  { src: '/assets/footer-slide-cookies.png', alt: 'A warm chocolate chip cookie pulled apart' },
-  { src: '/assets/footer-slide-cupcakes.png', alt: 'Colourful cupcakes topped with berries and sprinkles' },
-  { src: '/assets/footer-slide-celebration.png', alt: 'Celebration cakes and pastries in a bakery display' },
+  { src: '/assets/footer-slide-cakes.webp', alt: 'Layer cakes on stands in the atelier' },
+  { src: '/assets/footer-slide-cupcakes.webp', alt: 'Colourful cupcakes topped with berries and sprinkles' },
+  { src: '/assets/footer-slide-cookies.webp', alt: 'A warm chocolate chip cookie pulled apart' },
+  { src: '/assets/footer-slide-celebration.webp', alt: 'Celebration cakes and pastries in a bakery display' },
 ];
 export default function Footer() {
   return <footer className="site-footer">

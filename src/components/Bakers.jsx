@@ -32,7 +32,8 @@ export default function Bakers() {
     };
     measure();
     const tick = time => {
-      if (!visible || document.hidden) { frame = 0; previous = 0; return; }
+      frame = 0;
+      if (!visible || document.hidden) { previous = 0; return; }
       const elapsedFrame = previous ? Math.min((time - previous) / 1000, .04) : 0;
       previous = time;
       if (paused.current) { playback = 0; frame = requestAnimationFrame(tick); return; }
@@ -56,17 +57,25 @@ export default function Bakers() {
       element.style.transform = `translate3d(${-position}px,0,0)`;
       frame = requestAnimationFrame(tick);
     };
-    const resume = () => { if (!frame && visible && !document.hidden) frame = requestAnimationFrame(tick); };
-    const observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; resume(); });
+    const syncPlayback = () => {
+      if (visible && !document.hidden) {
+        if (!frame) frame = requestAnimationFrame(tick);
+      } else {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        previous = 0;
+      }
+    };
+    const observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; syncPlayback(); });
     observer.observe(gallery.current);
     const resize = new ResizeObserver(measure);
     resize.observe(gallery.current);
-    document.addEventListener('visibilitychange', resume);
-    return () => { cancelAnimationFrame(frame); observer.disconnect(); resize.disconnect(); document.removeEventListener('visibilitychange', resume); };
+    document.addEventListener('visibilitychange', syncPlayback);
+    return () => { cancelAnimationFrame(frame); observer.disconnect(); resize.disconnect(); document.removeEventListener('visibilitychange', syncPlayback); };
   }, [reduced]);
   return <section className="bakers section-wrap">
     <div className="bakers-heading"><div className="section-eyebrow"><i />Meet our bakers</div><DisplayHeading name="bakers">A little artistry, a lot of heart</DisplayHeading></div>
-    <div className="baker-gallery" ref={gallery} tabIndex={reduced ? 0 : undefined} role="region" aria-label="Our bakers"><div className="baker-track" ref={track}>{[...bakers, ...bakers].map(([image, mobileImage, alt], index) => <article className={`baker-card${activeCard === index ? ' is-revealed' : ''}`} key={image + index} aria-hidden={index >= bakers.length} tabIndex={index < bakers.length ? 0 : -1} onPointerEnter={event => { if (event.pointerType !== 'touch') engage('hovered', index); }} onPointerLeave={() => engage('hovered', null)} onFocus={() => engage('focused', index)} onBlur={() => engage('focused', null)}>
+    <div className="baker-gallery" ref={gallery} tabIndex={reduced ? 0 : undefined} role="region" aria-label="Our bakers"><div className="baker-track" ref={track}>{[...bakers, ...bakers].map(([image, mobileImage, alt], index) => <article className={`baker-card${activeCard === index ? ' is-revealed' : ''}`} key={image + index} aria-hidden={index >= bakers.length} tabIndex={index < bakers.length ? 0 : -1} onPointerEnter={event => { if (event.pointerType !== 'touch') engage('hovered', index); }} onPointerLeave={() => engage('hovered', null)} onFocus={event => { if (event.currentTarget.matches(':focus-visible')) engage('focused', index); }} onBlur={() => engage('focused', null)}>
       <SiteImage src={image} mobileSrc={mobileImage} alt={index >= bakers.length ? '' : alt} />
       <div className="baker-details"><div><p>Jose Denoso</p><span>Chief Connoisseur</span></div><span>15years</span></div>
     </article>)}</div></div>

@@ -5,10 +5,11 @@ import { CollectionLink } from './ButtonMotion.jsx';
 import useReducedMotion from '../hooks/useReducedMotion.js';
 
 const cakes = [
-  { image: '/assets/bestseller-wedding.png', mobileImage: '/assets/bestseller-wedding-mobile.png', name: 'The Catholic', note: 'Our most-loved wedding cake' },
-  { image: '/assets/bestseller-purple.png', name: 'The velvet cake', note: 'A little drama for the table' },
-  { image: '/assets/bestseller-third.png', name: 'The fresh baked collection', note: 'Made with care in our atelier' },
-  { image: '/assets/bestseller-fourth.png', name: 'The atelier collection', note: 'For every sweet moment' },
+  { image: '/assets/best-seller-one.png', name: 'The Santorini cake' },
+  { image: '/assets/best-seller-two.png', name: 'The orchid bloom' },
+  { image: '/assets/best-seller-three.png', name: 'The cupcake garden' },
+  { image: '/assets/best-seller-four.png', name: 'The atelier collection' },
+  { image: '/assets/best-seller-five.webp', name: 'The cookie stack' },
 ];
 export default function BestSellers({ items = cakes, id = 'best-sellers', eyebrow = 'Our best sellers', title = 'See what our customers are gushing over', headingName = 'bestsellers', mirror = false, initialIndex = 0 }) {
   const count = items.length;
