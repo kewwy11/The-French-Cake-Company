@@ -2,6 +2,10 @@ export function RollingLabel({ children, className = '' }) {
   return <span className={`rolling-label ${className}`}><span className="rolling-label-main">{children}</span><span className="rolling-label-copy" aria-hidden="true">{children}</span></span>;
 }
 
+export function MotionLink({ children, className = '', ...props }) {
+  return <a {...props} className={`motion-link ${className}`}><RollingLabel>{children}</RollingLabel></a>;
+}
+
 export function RollingArrow({ dark = false }) {
   return <span className="rolling-arrow" aria-hidden="true"><img src={dark ? '/assets/button-arrow-dark.svg' : '/assets/button-arrow-light.svg'} alt="" /><img src={dark ? '/assets/button-arrow-dark.svg' : '/assets/button-arrow-light.svg'} alt="" /></span>;
 }

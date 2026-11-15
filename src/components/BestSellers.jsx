@@ -3,6 +3,7 @@ import SiteImage from './SiteImage.jsx';
 import DisplayHeading from './DisplayHeading.jsx';
 import { CollectionLink } from './ButtonMotion.jsx';
 import useReducedMotion from '../hooks/useReducedMotion.js';
+import useMobileReveal from '../hooks/useMobileReveal.js';
 
 const cakes = [
   { image: '/assets/best-seller-one.png', name: 'The Santorini cake' },
@@ -18,23 +19,29 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
   const [hovered, setHovered] = useState(null);
   const [focused, setFocused] = useState(null);
   const [touched, setTouched] = useState(null);
-  const [automatic, setAutomatic] = useState(null);
-  const automaticTimer = useRef(null);
-  const revealed = hovered ?? focused ?? touched ?? automatic;
+  const [moving, setMoving] = useState(false);
   const viewport = useRef(null);
   const track = useRef(null);
   const motion = useRef({ position: count + initialIndex, step: 0, alignment: 0, frame: 0, queue: [], moving: false });
+  const automatic = useMobileReveal(viewport, { selector: '.best-card.is-main', resetKey: index, enabled: !moving });
+  const revealed = moving ? null : hovered ?? focused ?? touched ?? (automatic.active ? Number(automatic.active.dataset.slide) : null);
   const reduced = useReducedMotion();
   useLayoutEffect(() => {
     const state = motion.current;
     const measure = () => {
+      const width = track.current.firstElementChild.getBoundingClientRect().width;
+      const step = width + parseFloat(getComputedStyle(track.current).gap);
+      const alignment = mirror && !matchMedia('(max-width: 760px)').matches ? Math.max(0, viewport.current.clientWidth - width) : 0;
+      if (Math.abs(state.step - step) < .1 && Math.abs(state.alignment - alignment) < .1) return;
       cancelAnimationFrame(state.frame);
+      state.position += state.moving ? state.direction : 0;
       state.moving = false;
       state.queue = [];
+      setMoving(false);
       state.position = count + ((state.position % count) + count) % count;
-      const width = track.current.firstElementChild.getBoundingClientRect().width;
-      state.step = width + parseFloat(getComputedStyle(track.current).gap);
-      state.alignment = mirror && !matchMedia('(max-width: 760px)').matches ? Math.max(0, viewport.current.clientWidth - width) : 0;
+      state.step = step;
+      state.alignment = alignment;
+      setIndex(state.position % count);
       track.current.style.transform = `translate3d(${-state.position * state.step + state.alignment}px,0,0)`;
     };
     measure();
@@ -42,31 +49,6 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
     observer.observe(viewport.current);
     return () => { observer.disconnect(); cancelAnimationFrame(state.frame); };
   }, [count, mirror]);
-  useEffect(() => {
-    const mobile = matchMedia('(max-width: 760px)');
-    const card = track.current.querySelector(`[data-slide="${count + index}"]`);
-    let inView = false;
-    const schedule = () => {
-      clearTimeout(automaticTimer.current);
-      setAutomatic(null);
-      if (mobile.matches && inView && !document.hidden) {
-        automaticTimer.current = setTimeout(() => setAutomatic(count + index), 2000);
-      }
-    };
-    const observer = new IntersectionObserver(entries => {
-      inView = entries[0].isIntersecting && entries[0].intersectionRatio >= .6;
-      schedule();
-    }, { threshold: [0, .6] });
-    observer.observe(card);
-    mobile.addEventListener('change', schedule);
-    document.addEventListener('visibilitychange', schedule);
-    return () => {
-      clearTimeout(automaticTimer.current);
-      observer.disconnect();
-      mobile.removeEventListener('change', schedule);
-      document.removeEventListener('visibilitychange', schedule);
-    };
-  }, [count, index]);
   useEffect(() => {
     const clearTouch = event => {
       if (!viewport.current.contains(event.target)) setTouched(null);
@@ -81,13 +63,14 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
     const advance = () => {
       if (!state.queue.length || !track.current) return;
       state.moving = true;
+      setMoving(true);
       setHovered(null);
       setFocused(null);
       setTouched(null);
-      clearTimeout(automaticTimer.current);
-      setAutomatic(null);
+      automatic.dismiss();
       const by = state.queue.shift();
-      const keepFocus = track.current.contains(document.activeElement);
+      state.direction = by;
+      const keepFocus = track.current.contains(document.activeElement) && document.activeElement.matches(':focus-visible');
       const from = -state.position * state.step + state.alignment;
       const to = -(state.position + by) * state.step + state.alignment;
       const finish = () => {
@@ -96,8 +79,9 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
         track.current.style.transform = `translate3d(${-state.position * state.step + state.alignment}px,0,0)`;
         setHovered(current => current === null ? null : count + current % count);
         setIndex(state.position % count);
-        if (keepFocus) track.current.querySelector(`[data-slide="${state.position}"]`).focus({ preventScroll: true });
         state.moving = false;
+        setMoving(false);
+        if (keepFocus && !state.queue.length) track.current.querySelector(`[data-slide="${state.position}"]`).focus({ preventScroll: true });
         advance();
       };
       if (reduced) { finish(); return; }
@@ -130,9 +114,9 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
     advance();
   };
   const touch = useRef(null);
-  return <section id={id} className={`best-sellers section-wrap${mirror ? ' newest-releases' : ''}`} aria-labelledby={`${id}-title`} aria-roledescription="carousel">
+  return <section id={id} className={`best-sellers section-wrap${mirror ? ' newest-releases' : ''}${moving ? ' is-moving' : ''}`} aria-labelledby={`${id}-title`} aria-roledescription="carousel">
     <div className="best-sellers-intro"><div className="section-eyebrow"><picture aria-hidden="true"><source media="(max-width: 760px)" srcSet="/assets/about-marker-mobile.svg" /><img src="/assets/bestseller-marker.svg" alt="" /></picture>{eyebrow}</div><DisplayHeading id={`${id}-title`} name={headingName} mobileSrc={mirror ? `/assets/title-${headingName}-desktop.png` : undefined}>{title}</DisplayHeading>
-      <div className="slider-controls"><button className="round-arrow arrow-back" onClick={() => move(-1)} aria-label="Previous cakes"><img src="/assets/icon-chevron.svg" alt="" /></button><button className="round-arrow" onClick={() => move(1)} aria-label="Next cakes"><img src="/assets/icon-chevron.svg" alt="" /></button></div>
+      <div className="slider-controls"><button type="button" className="round-arrow arrow-back" onClick={() => move(-1)} aria-label="Previous cakes"><img src="/assets/icon-chevron.svg" alt="" /></button><button type="button" className="round-arrow" onClick={() => move(1)} aria-label="Next cakes"><img src="/assets/icon-chevron.svg" alt="" /></button></div>
     </div>
     <div className="best-sellers-viewport" ref={viewport} onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1); } }} onTouchStart={event => { touch.current = { x: event.touches[0].clientX, y: event.touches[0].clientY }; }} onTouchEnd={event => {
       if (!touch.current) return;
@@ -141,7 +125,7 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
       if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) move(dx < 0 ? 1 : -1);
       touch.current = null;
     }}>
-      <div className="best-sellers-track" ref={track}>{slides.map((cake, physicalIndex) => <article className={`best-card${physicalIndex === count + index ? ' is-main' : ''}${revealed === physicalIndex ? ' is-revealed' : ''}`} data-slide={physicalIndex} key={physicalIndex} tabIndex={physicalIndex === count + index ? 0 : -1} aria-hidden={physicalIndex < count || physicalIndex >= count * 2 ? true : undefined} aria-label={cake.name} onPointerEnter={event => { if (event.pointerType !== 'touch') { setHovered(physicalIndex); setFocused(null); setTouched(null); } }} onPointerLeave={() => setHovered(current => current === physicalIndex ? null : current)} onFocus={event => { if (event.target.matches(':focus-visible')) setFocused(physicalIndex); }} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(current => current === physicalIndex ? null : current); }} onPointerDown={event => { if (event.pointerType === 'touch' && !event.target.closest('a')) { clearTimeout(automaticTimer.current); setAutomatic(null); setTouched(revealed === physicalIndex ? null : physicalIndex); } }}>
+      <div className="best-sellers-track" ref={track}>{slides.map((cake, physicalIndex) => <article className={`best-card${physicalIndex === count + index ? ' is-main' : ''}${revealed === physicalIndex ? ' is-revealed' : ''}`} data-slide={physicalIndex} key={physicalIndex} tabIndex={physicalIndex === count + index ? 0 : -1} aria-hidden={physicalIndex < count || physicalIndex >= count * 2 ? true : undefined} aria-label={cake.name} onPointerEnter={event => { if (event.pointerType !== 'touch' && !motion.current.moving) { setHovered(physicalIndex); setFocused(null); setTouched(null); } }} onPointerLeave={() => setHovered(current => current === physicalIndex ? null : current)} onFocus={event => { if (!motion.current.moving && event.target.matches(':focus-visible')) setFocused(physicalIndex); }} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(current => current === physicalIndex ? null : current); }} onPointerDown={event => { if (event.pointerType === 'touch' && !event.target.closest('a') && !motion.current.moving) { automatic.dismiss(); setTouched(revealed === physicalIndex ? null : physicalIndex); } }}>
         <SiteImage src={cake.image} mobileSrc={cake.mobileImage} alt={cake.name} />
         <div className="best-card-details"><p>{cake.name}</p><CollectionLink name={cake.name} tabIndex={physicalIndex >= count && physicalIndex < count * 2 && (physicalIndex === count + index || revealed === physicalIndex) ? 0 : -1} /></div>
       </article>)}</div>

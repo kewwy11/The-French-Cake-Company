@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import SiteImage from './SiteImage.jsx';
 import DisplayHeading from './DisplayHeading.jsx';
 import useReducedMotion from '../hooks/useReducedMotion.js';
@@ -20,7 +20,7 @@ function Story({ story }) {
 
 export default function Testimonial() {
   const [slide, setSlide] = useState({ active: 0, previous: null, direction: 1, sequence: 0 });
-  const motion = useRef({ active: 0, busy: false, queue: [] });
+  const motion = useRef({ active: 0, sequence: 0, busy: false, queue: [] });
   const section = useRef(null);
   const reduced = useReducedMotion();
   useEffect(() => {
@@ -36,32 +36,38 @@ export default function Testimonial() {
     const previous = state.active;
     state.active = (state.active + direction + stories.length) % stories.length;
     state.busy = !reduced;
-    setSlide(current => ({ active: state.active, previous: reduced ? null : previous, direction, sequence: current.sequence + 1 }));
+    state.sequence += 1;
+    setSlide({ active: state.active, previous: reduced ? null : previous, direction, sequence: state.sequence });
   };
   const move = direction => { motion.current.queue.push(direction); advance(); };
   const autoplay = useAutoplay({ ref: section, delay: 10000, resetKey: slide.sequence, onAdvance: () => { if (!motion.current.busy) move(1); } });
-  const complete = () => {
+  const complete = sequence => {
+    if (!motion.current.busy || motion.current.sequence !== sequence) return;
     motion.current.busy = false;
     setSlide(current => ({ ...current, previous: null }));
     advance();
   };
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (slide.previous === null) return;
-    // Browsers can cancel animationend when a tab or its motion settings change.
-    const timer = setTimeout(complete, 1000);
-    return () => clearTimeout(timer);
-  }, [slide.sequence, slide.previous]);
-  const finish = event => {
-    if (event.target !== event.currentTarget || event.animationName !== 'testimonial-sweep') return;
-    complete();
-  };
+    if (reduced) { complete(slide.sequence); return; }
+    const incoming = section.current.querySelector(`[data-story="${slide.active}"]`);
+    // Set up the closed mask before paint, including the very first click.
+    // One completion token prevents an old animation or fallback skipping a story.
+    const animation = incoming.animate([
+      { maskPosition: slide.direction < 0 ? '100% 0%' : '0% 0%' },
+      { maskPosition: slide.direction < 0 ? '0% 0%' : '100% 0%' },
+    ], { duration: 850, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
+    animation.finished.then(() => complete(slide.sequence)).catch(() => {});
+    const timer = setTimeout(() => complete(slide.sequence), 1000);
+    return () => { clearTimeout(timer); animation.cancel(); };
+  }, [slide.sequence, slide.previous, reduced]);
   return <section ref={section} className="testimonial section-wrap">
     <div className="testimonial-heading">
       <div><div className="section-eyebrow"><i />The cake curator</div><DisplayHeading name="testimonial">The proof is in the celebration</DisplayHeading></div>
       <div className="slider-controls"><button type="button" className="round-arrow arrow-back" aria-label="Previous story" onClick={() => move(-1)}><img src="/assets/icon-chevron.svg" alt="" /></button><button type="button" className="round-arrow" aria-label="Next story" onClick={() => move(1)}><img src="/assets/icon-chevron.svg" alt="" /></button></div>
     </div>
     <div className="testimonial-stage" aria-roledescription="carousel" aria-label="Customer celebrations">
-      {stories.map((story, index) => <div key={index} className={`testimonial-content${index === slide.active ? ' is-current' : ''}${index === slide.previous ? ' is-outgoing' : ''}${index === slide.active && slide.previous !== null ? ' is-entering' : ''} ${slide.direction < 0 ? 'sweep-from-left' : 'sweep-from-right'}`} aria-hidden={index !== slide.active} inert={index !== slide.active} onAnimationEnd={finish}><Story story={story} /></div>)}
+      {stories.map((story, index) => <div key={index} data-story={index} className={`testimonial-content${index === slide.active ? ' is-current' : ''}${index === slide.previous ? ' is-outgoing' : ''}${index === slide.active && slide.previous !== null ? ' is-entering' : ''} ${slide.direction < 0 ? 'sweep-from-left' : 'sweep-from-right'}`} aria-hidden={index !== slide.active} inert={index !== slide.active}><Story story={story} /></div>)}
     </div>
     <span className="visually-hidden" role="status" aria-live={autoplay ? 'off' : 'polite'}>Celebration {slide.active + 1} of {stories.length}</span>
   </section>;

@@ -3,10 +3,14 @@
 .footer-column .footer-mobile-finder { display: none; }
 .review-quote p { text-transform: none; }
 .quote-mark img { display: block; width: 115px; height: 115px; object-fit: contain; }
+.motion-link .rolling-label { line-height: inherit; }
+button, a { touch-action: manipulation; }
+.round-arrow, .round-arrow:hover { transform: none; }
 
 @media (max-width: 760px) {
-  .opening-title, .opening-photo { display: none; }
-  .opening-mobile-wordmark { display: block; position: absolute; left: 50%; top: 50%; width: 216px; height: 53px; transform: translate(-50%,-50%); }
+  .opening-title { display: flex; gap: 5px; }
+  .opening-photo { display: none; }
+  .opening-line:first-child img, .opening-line:last-child img { width: 216px; height: 24px; }
 
   /* The mobile hero uses its own type, icon strokes, and image crop. */
   .hero { height: 716px; min-height: 716px; }
@@ -19,16 +23,17 @@
   .hero .header-tools .icon-button { flex: 0 0 40px; width: 40px; height: 44px; }
   .hero .header-tools .account-icon, .hero .header-tools .language-chip { display: none; }
   .hero .header-tools picture { display: block; }
-  .hero .hero-copy { top: 206px; left: 20px; right: 20px; width: auto; transform: none; }
+  .hero .hero-copy { position: static; width: auto; transform: none; }
+  .hero .hero-statement { position: absolute; left: 20px; right: 20px; top: calc(50% - 43.5px); transform: translateY(-50%); }
   .hero .hero-kicker { height: 18px; font-size: 13px; font-weight: 400; line-height: 18px; margin: 0; }
   .hero .hero-reveal-title { margin-top: 10px; }
-  .hero .display-heading { height: 149px; margin: 0; }
-  .hero .display-heading img { width: 348px; height: auto; max-width: 100%; }
+  .hero .display-heading { width: 100%; max-width: none; height: auto; aspect-ratio: 350 / 149; margin: 0; }
+  .hero .display-heading img { width: 100%; height: auto; max-width: 100%; }
   .hero .hero-reveal-script { margin-top: 5px; }
-  .hero .hero-script { height: 35px; margin: 0; padding-right: 10px; font-size: 32px; line-height: 35px; }
+  .hero .hero-script { height: 35px; margin: 0; padding-right: 15px; font-size: 32px; line-height: 35px; }
   .hero .hero-script picture { display: none; }
   .hero-cakes-mobile { display: block; font-family: Manrope,Arial,sans-serif; font-weight: 400; }
-  .hero .hero-reveal-actions { top: 334px; }
+  .hero .hero-reveal-actions { top: 540px; left: 20px; right: 20px; }
   .hero .hero-actions { min-height: 122px; gap: 10px; }
   .hero .hero-actions .hero-button { min-height: 56px; padding: 18px 16px; font-family: Manrope,Arial,sans-serif; font-size: 12px; line-height: 16px; }
   .hero .hero-button .hero-button-label { height: 16px; line-height: 16px; }
@@ -137,7 +142,8 @@
   .bakers-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; height: 117px; margin: 0 0 24px; }
   .bakers-heading .section-eyebrow { font-size: 11px; line-height: 15px; }
   .bakers-heading .display-heading { margin: 0; }
-  .bakers-heading .display-heading img { width: 277px; max-width: 100%; }
+  .bakers-heading .display-heading { height: 82px; width: 100%; }
+  .bakers-heading .display-heading img { width: 342px; max-width: 100%; }
   .baker-gallery { display: block; width: calc(100% + 24px); }
   .baker-track { gap: 10px; }
   .baker-card, .baker-card:nth-child(3) { flex-basis: min(325px,calc(100vw - 48px)); width: min(325px,calc(100vw - 48px)); }
@@ -188,7 +194,6 @@
 @media (max-width: 360px) {
   .best-sellers .display-heading { width: calc(100% - 82px); }
   .best-sellers-intro .slider-controls { right: 0; }
-  .hero .hero-copy { top: 206px; }
   .review-card { height: 390px; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -1,6 +1,7 @@
 .opening-sequence { position: fixed; inset: 0; z-index: 1000; overflow: hidden; background: var(--paper); }
 .opening-title { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
 .opening-line { display: block; overflow: hidden; flex: 0 0 auto; }
+.opening-line picture { display: block; }
 .opening-line img { display: block; height: auto; transform: translateY(115%); }
 .opening-line:first-child img { width: 44px; }
 .opening-line:last-child img { width: min(323px, 86vw); }

@@ -36,20 +36,6 @@ export default function OpeningSequence({ onComplete }) {
       return animation;
     };
     async function play() {
-      if (matchMedia('(max-width: 760px)').matches) {
-        const wordmark = element.querySelector('.opening-mobile-wordmark');
-        await wordmark.decode().catch(() => {});
-        if (cancelled) return;
-        if (media.matches || !element.animate) { finish(); return; }
-        const welcome = animate(wordmark, [
-          { opacity: 0 }, { opacity: 1, offset: .22 }, { opacity: 1 },
-        ], { duration: 1500, easing: 'ease-in-out' });
-        await welcome.finished;
-        if (cancelled) return;
-        await animate(element, [{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-in-out' }).finished;
-        finish();
-        return;
-      }
       await Promise.all([...element.querySelectorAll('.opening-line img')].map(img => img.decode().catch(() => {})));
       if (cancelled) return;
       if (media.matches || !element.animate) { finish(); return; }
@@ -60,6 +46,18 @@ export default function OpeningSequence({ onComplete }) {
           { transform: 'translateY(115%)' }, { transform: 'translateY(0)' },
         ], { duration: TIMING.title, delay: index * TIMING.titleStagger, easing: PHOTO_EASE });
       });
+      if (matchMedia('(max-width: 760px)').matches) {
+        // Use the desktop's exact two-line mask animation at mobile type size.
+        animations.forEach(animation => { animation.startTime = clock; });
+        await Promise.all([
+          animations[animations.length - 1].finished,
+          document.querySelector('.hero-slide:first-child img').decode().catch(() => {}),
+        ]);
+        if (cancelled) return;
+        await animate(element, [{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-in-out' }).finished;
+        finish();
+        return;
+      }
       // Show the title while the larger photos decode, so slow connections never start on a blank screen.
       await Promise.all([...element.querySelectorAll('.opening-photo img')].map(img => img.decode().catch(() => {})));
       if (cancelled) return;
@@ -102,10 +100,9 @@ export default function OpeningSequence({ onComplete }) {
     };
   }, [onComplete]);
   return <div ref={root} className="opening-sequence" aria-label="Welcome to The French Cake Company" role="status">
-    <img className="opening-mobile-wordmark" src="/assets/intro-mobile.png" alt="" />
     <div className="opening-title" aria-label="The French Cake Company">
-      <span className="opening-line"><img src="/assets/intro-the.png" alt="" /></span>
-      <span className="opening-line"><img src="/assets/intro-company.png" alt="" /></span>
+      <span className="opening-line"><picture><source media="(max-width: 760px)" srcSet="/assets/intro-the-mobile.png" /><img src="/assets/intro-the.png" alt="" /></picture></span>
+      <span className="opening-line"><picture><source media="(max-width: 760px)" srcSet="/assets/intro-company-mobile.png" /><img src="/assets/intro-company.png" alt="" /></picture></span>
     </div>
     <div className="opening-photo opening-left" aria-hidden="true"><img src={heroSlides[2].src} alt="" /></div>
     <div className="opening-photo opening-right" aria-hidden="true"><img src={heroSlides[1].src} alt="" /></div>

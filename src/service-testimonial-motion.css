@@ -23,7 +23,7 @@
 .testimonial-stage > .is-current, .testimonial-stage > .is-outgoing { visibility: visible; }
 .testimonial-stage > .is-outgoing { z-index: 1; }
 .testimonial-stage > .is-current { z-index: 2; pointer-events: auto; }
-.testimonial-stage > .is-entering { mask-size: 240% 100%; mask-repeat: no-repeat; animation: testimonial-sweep 850ms cubic-bezier(.4,0,.2,1) both; }
+.testimonial-stage > .is-entering { mask-size: 240% 100%; mask-repeat: no-repeat; mask-position: var(--sweep-start); }
 .sweep-from-left { --sweep-start: 100% 0%; --sweep-end: 0% 0%; mask-image: linear-gradient(to right, #000 45%, transparent 55%); }
 .sweep-from-right { --sweep-start: 0% 0%; --sweep-end: 100% 0%; mask-image: linear-gradient(to right, transparent 45%, #000 55%); }
 .testimonial-stage > .testimonial-content:not(.is-entering) { mask-image: none; }

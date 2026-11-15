@@ -1,0 +1,30 @@
+.circular-menu-shell { position: fixed; inset: 0; z-index: 900; overflow: hidden; visibility: hidden; pointer-events: none; outline: none; transition: visibility 0s linear 850ms; }
+.circular-menu-shell.is-open { visibility: visible; transition: visibility 0s; }
+.circular-menu { position: fixed; inset: 0; z-index: 0; background: var(--paper); color: var(--brown-light); overflow: hidden; visibility: hidden; pointer-events: none; outline: none; clip-path: circle(0px at var(--menu-x) var(--menu-y)); transition: clip-path 850ms cubic-bezier(.76,0,.24,1), visibility 0s linear 850ms; }
+.circular-menu.is-open { clip-path: circle(var(--menu-radius) at var(--menu-x) var(--menu-y)); visibility: visible; pointer-events: auto; transition: clip-path 850ms cubic-bezier(.76,0,.24,1), visibility 0s; }
+.menu-close { position: absolute; top: max(32px,env(safe-area-inset-top)); right: 24px; z-index: 2; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; background: transparent; color: var(--brown-light); border: 1px solid rgb(120 83 69 / .2); border-radius: 100%; cursor: pointer; pointer-events: none; }
+.circular-menu-shell.is-open > button { pointer-events: auto; }
+.menu-close img { display: block; transition: transform 500ms cubic-bezier(.45,0,.55,1); }
+.menu-close:hover img { transform: rotate(90deg); }
+.menu-origin-toggle { position: absolute; left: var(--menu-x); top: var(--menu-y); z-index: 2; transform: translate(-50%,-50%); width: 44px; height: 44px; padding: 0; border: 0; background: transparent; visibility: hidden; opacity: 0; cursor: pointer; pointer-events: none; }
+.is-open .menu-origin-toggle { animation: menu-origin-handoff 850ms linear both; }
+.menu-origin-toggle img { position: absolute; inset: 0; margin: auto; transition: transform 350ms cubic-bezier(.45,0,.55,1), opacity 250ms ease; }
+.origin-close-glyph { opacity: 0; transform: rotate(-90deg); }
+.is-open .origin-menu-glyph { opacity: 0; transform: rotate(90deg); }
+.is-open .origin-close-glyph { opacity: 1; transform: rotate(0); }
+@keyframes menu-origin-handoff { 0%,65% { visibility: visible; opacity: 1; } 99% { visibility: visible; opacity: 0; } 100% { visibility: hidden; opacity: 0; } }
+.circular-menu-links { position: absolute; left: 50%; top: calc(50% + 1px); transform: translate(-50%,-50%); width: 245px; max-width: calc(100% - 48px); display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.circular-menu-links > a { display: block; flex: 0 0 auto; width: fit-content; padding: 16px; border-bottom: .5px solid rgb(120 83 69 / .45); line-height: 0; }
+.menu-link-mask { display: block; overflow: hidden; height: 40px; }
+.menu-link-entry { display: block; opacity: 0; transform: translateY(115%); transition: transform 350ms cubic-bezier(.76,0,.24,1), opacity 250ms ease; }
+.is-open .menu-link-entry { opacity: 1; transform: translateY(0); transition: transform 650ms cubic-bezier(.22,1,.36,1) calc(180ms + var(--menu-link-order) * 70ms), opacity 450ms ease calc(180ms + var(--menu-link-order) * 70ms); }
+.menu-link-label.rolling-label { display: grid; height: 40px; line-height: 0; }
+.menu-link-label img { display: block; }
+.circular-menu a:focus-visible, .menu-close:focus-visible { outline: 2px solid var(--brown-light); outline-offset: 4px; }
+.hero .menu-toggle .menu-icon-stack { display: block; position: relative; width: 24px; height: 24px; background: none; }
+.menu-icon-stack img { position: absolute; inset: 0; margin: auto; transition: transform 500ms cubic-bezier(.45,0,.55,1), opacity 350ms ease; }
+.menu-icon-stack .menu-close-glyph { opacity: 0; transform: rotate(-90deg); }
+.menu-toggle[aria-expanded="true"] .menu-open-glyph { opacity: 0; transform: rotate(90deg); }
+.menu-toggle[aria-expanded="true"] .menu-close-glyph { opacity: 1; transform: rotate(0); }
+@media (max-height: 430px) { .circular-menu-links { gap: 4px; } .circular-menu-links > a { padding: 8px 16px; } }
+@media (prefers-reduced-motion: reduce) { .circular-menu-shell, .circular-menu-shell.is-open, .circular-menu, .circular-menu.is-open, .menu-link-entry, .is-open .menu-link-entry, .menu-icon-stack img, .menu-close img, .menu-origin-toggle img { transition: none; } .is-open .menu-origin-toggle { animation: none; } }
