@@ -36,6 +36,20 @@ export default function OpeningSequence({ onComplete }) {
       return animation;
     };
     async function play() {
+      if (matchMedia('(max-width: 760px)').matches) {
+        const wordmark = element.querySelector('.opening-mobile-wordmark');
+        await wordmark.decode().catch(() => {});
+        if (cancelled) return;
+        if (media.matches || !element.animate) { finish(); return; }
+        const welcome = animate(wordmark, [
+          { opacity: 0 }, { opacity: 1, offset: .22 }, { opacity: 1 },
+        ], { duration: 1500, easing: 'ease-in-out' });
+        await welcome.finished;
+        if (cancelled) return;
+        await animate(element, [{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-in-out' }).finished;
+        finish();
+        return;
+      }
       await Promise.all([...element.querySelectorAll('.opening-line img')].map(img => img.decode().catch(() => {})));
       if (cancelled) return;
       if (media.matches || !element.animate) { finish(); return; }
@@ -88,6 +102,7 @@ export default function OpeningSequence({ onComplete }) {
     };
   }, [onComplete]);
   return <div ref={root} className="opening-sequence" aria-label="Welcome to The French Cake Company" role="status">
+    <img className="opening-mobile-wordmark" src="/assets/intro-mobile.png" alt="" />
     <div className="opening-title" aria-label="The French Cake Company">
       <span className="opening-line"><img src="/assets/intro-the.png" alt="" /></span>
       <span className="opening-line"><img src="/assets/intro-company.png" alt="" /></span>

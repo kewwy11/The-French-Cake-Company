@@ -13,7 +13,7 @@ const stories = [
 function Story({ story }) {
   const photo = <SiteImage src={story.image} mobileSrc={story.mobileImage} alt={story.alt} className="testimonial-photo" loading="eager" />;
   return <>{story.imageFirst && photo}<article className="review-card">
-    <div className="review-quote"><img className="quote-mark" src="/assets/testimonial-quote.png" alt="" /><p>{story.quote}</p></div>
+    <div className="review-quote"><picture className="quote-mark"><source media="(max-width: 760px)" srcSet="/assets/testimonial-quote-mobile.svg" /><img src="/assets/testimonial-quote.png" alt="" /></picture><p>{story.quote}</p></div>
     <div className="reviewer"><SiteImage src={story.avatar} alt="" className="review-avatar" loading="eager" /><div><b>{story.name}</b><span>{story.event}</span></div></div>
   </article>{!story.imageFirst && photo}</>;
 }

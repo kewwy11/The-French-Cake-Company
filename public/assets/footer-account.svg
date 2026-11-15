@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Account icon">
+<mask id="stroke0_0_4" fill="white">
+<path d="M10 9.2C11.8778 9.2 13.4 7.70015 13.4 5.85C13.4 3.99985 11.8778 2.5 10 2.5C8.12223 2.5 6.6 3.99985 6.6 5.85C6.6 7.70015 8.12223 9.2 10 9.2Z"/>
+</mask>
+<path id="Profile head" d="M13.4 5.85C13.4 7.70015 11.8778 9.2 10 9.2C8.12223 9.2 6.6 7.70015 6.6 5.85C6.6 3.99985 8.12223 2.5 10 2.5C11.8778 2.5 13.4 3.99985 13.4 5.85Z" stroke-width="3" stroke="#FFFCF7" mask="url(#stroke0_0_4)"/>
+<mask id="stroke1_0_4" fill="white">
+<path d="M10 11.7C5.8125 11.7 3.3 13.7714 3.3 15.8429C3.3 16.7581 4.04992 17.5 4.975 17.5H15.025C15.9501 17.5 16.7 16.7581 16.7 15.8429C16.7 13.7714 14.1875 11.7 10 11.7Z"/>
+</mask>
+<path id="Profile shoulders" d="M10 11.7C5.8125 11.7 3.3 13.7714 3.3 15.8429C3.3 16.7581 4.04992 17.5 4.975 17.5H15.025C15.9501 17.5 16.7 16.7581 16.7 15.8429C16.7 13.7714 14.1875 11.7 10 11.7Z" stroke-width="3" stroke="#FFFCF7" mask="url(#stroke1_0_4)"/>
+</g>
+</svg>

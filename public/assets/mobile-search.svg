@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="40" height="44" viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Search control">
+<path id="Search handle" d="M23 24L27 28" stroke-width="1.5" stroke="#FFFCF7"/>
+<mask id="stroke0_0_11" fill="white">
+<path d="M24 18C24 14.134 20.866 11 17 11C13.134 11 10 14.134 10 18C10 21.866 13.134 25 17 25C20.866 25 24 21.866 24 18Z"/>
+</mask>
+<path id="Search lens" d="M24 18C24 14.134 20.866 11 17 11C13.134 11 10 14.134 10 18C10 21.866 13.134 25 17 25C20.866 25 24 21.866 24 18Z" stroke-width="3" stroke="#FFFCF7" mask="url(#stroke0_0_11)"/>
+</g>
+</svg>

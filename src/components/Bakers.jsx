@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import SiteImage from './SiteImage.jsx';
 import DisplayHeading from './DisplayHeading.jsx';
 import useReducedMotion from '../hooks/useReducedMotion.js';
+import { BAKER_CARD_DURATION, bakerPullProgress } from '../baker-motion.js';
 const bakers = [
   ['/assets/baker-one.png', '/assets/baker-one-mobile.png', 'The pastry chef at work', 'Pastry chef'],
   ['/assets/baker-two.png', undefined, 'A member of our atelier team', 'Our atelier team'],
@@ -14,6 +15,7 @@ export default function Bakers() {
   const paused = useRef(false);
   const interaction = useRef({ hovered: null, focused: null });
   const [activeCard, setActiveCard] = useState(null);
+  const [visibleCards, setVisibleCards] = useState([0, 1, 2]);
   const engage = (kind, index) => {
     interaction.current[kind] = index;
     const active = interaction.current.hovered ?? interaction.current.focused;
@@ -22,13 +24,31 @@ export default function Bakers() {
   };
   const reduced = useReducedMotion();
   useEffect(() => {
+    const visible = new Set();
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const index = Number(entry.target.dataset.baker);
+        if (entry.isIntersecting && entry.intersectionRatio >= .35) visible.add(index);
+        else visible.delete(index);
+      });
+      setVisibleCards([...visible]);
+    }, { root: gallery.current, threshold: [0, .35] });
+    [...track.current.children].forEach(card => observer.observe(card));
+    return () => observer.disconnect();
+  }, [reduced]);
+  useEffect(() => {
     const element = track.current;
     if (reduced) { element.style.transform = 'translate3d(0,0,0)'; return; }
-    let frame = 0, visible = false, previous = 0, elapsed = 0, position = 0, velocity = 0, step = 0, playback = 1;
+    let frame = 0, visible = false, previous = 0, elapsed = 0, cycle = 0, playback = 0;
     const measure = () => {
-      const next = element.children[1].offsetLeft - element.children[0].offsetLeft;
-      if (step) { position *= next / step; velocity *= next / step; }
-      step = next;
+      cycle = element.children[bakers.length].offsetLeft - element.children[0].offsetLeft;
+      paint();
+    };
+    const paint = () => {
+      if (!cycle) return;
+      const phase = elapsed / BAKER_CARD_DURATION;
+      const position = (Math.floor(phase) + bakerPullProgress(phase % 1)) * cycle / bakers.length;
+      element.style.transform = `translate3d(${-position % cycle}px,0,0)`;
     };
     measure();
     const tick = time => {
@@ -37,24 +57,10 @@ export default function Bakers() {
       const elapsedFrame = previous ? Math.min((time - previous) / 1000, .04) : 0;
       previous = time;
       if (paused.current) { playback = 0; frame = requestAnimationFrame(tick); return; }
-      playback = Math.min(1, playback + elapsedFrame / .45);
-      const dt = elapsedFrame * playback;
-      elapsed += dt;
-      // A forward-moving target has a gentle pull/glide cadence. The same
-      // damped spring as the best sellers follows it without stopping the track.
-      const phase = elapsed / 5.5;
-      const target = step * (phase - .055 * Math.sin(phase * Math.PI * 2));
-      const substeps = 4;
-      for (let i = 0; i < substeps; i++) {
-        const h = dt / substeps;
-        const force = 144 * (target - position) - 17.28 * velocity;
-        velocity += force * h;
-        position += velocity * h;
-      }
-      const cycle = step * bakers.length;
-      // Rebase both spring and target together so the seam never accumulates error.
-      if (position >= cycle) { position -= cycle; elapsed -= 5.5 * bakers.length; }
-      element.style.transform = `translate3d(${-position}px,0,0)`;
+      playback = Math.min(1, playback + elapsedFrame / .65);
+      const resume = playback * playback * (3 - 2 * playback);
+      elapsed = (elapsed + elapsedFrame * resume) % (BAKER_CARD_DURATION * bakers.length);
+      paint();
       frame = requestAnimationFrame(tick);
     };
     const syncPlayback = () => {
@@ -75,8 +81,8 @@ export default function Bakers() {
   }, [reduced]);
   return <section className="bakers section-wrap">
     <div className="bakers-heading"><div className="section-eyebrow"><i />Meet our bakers</div><DisplayHeading name="bakers">A little artistry, a lot of heart</DisplayHeading></div>
-    <div className="baker-gallery" ref={gallery} tabIndex={reduced ? 0 : undefined} role="region" aria-label="Our bakers"><div className="baker-track" ref={track}>{[...bakers, ...bakers].map(([image, mobileImage, alt], index) => <article className={`baker-card${activeCard === index ? ' is-revealed' : ''}`} key={image + index} aria-hidden={index >= bakers.length} tabIndex={index < bakers.length ? 0 : -1} onPointerEnter={event => { if (event.pointerType !== 'touch') engage('hovered', index); }} onPointerLeave={() => engage('hovered', null)} onFocus={event => { if (event.currentTarget.matches(':focus-visible')) engage('focused', index); }} onBlur={() => engage('focused', null)}>
-      <SiteImage src={image} mobileSrc={mobileImage} alt={index >= bakers.length ? '' : alt} />
+    <div className="baker-gallery" ref={gallery} tabIndex={reduced ? 0 : undefined} role="region" aria-label="Our bakers"><div className="baker-track" ref={track}>{[...bakers, ...bakers].map(([image, mobileImage, alt], index) => <article className={`baker-card${activeCard === index ? ' is-revealed' : ''}`} key={image + index} data-baker={index} aria-hidden={!visibleCards.includes(index)} tabIndex={visibleCards.includes(index) ? 0 : -1} onPointerEnter={event => { if (event.pointerType !== 'touch') engage('hovered', index); }} onPointerLeave={() => engage('hovered', null)} onFocus={event => { if (event.currentTarget.matches(':focus-visible')) engage('focused', index); }} onBlur={() => engage('focused', null)}>
+      <SiteImage src={image} mobileSrc={mobileImage} alt={alt} />
       <div className="baker-details"><div><p>Jose Denoso</p><span>Chief Connoisseur</span></div><span>15years</span></div>
     </article>)}</div></div>
   </section>;
