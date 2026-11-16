@@ -35,7 +35,7 @@ export default function Hero({ isRevealed = true }) {
       <div className="hero-reveal hero-reveal-title"><DisplayHeading as="h1" name="hero">Extraordinary</DisplayHeading></div>
       <div className="hero-reveal hero-reveal-script"><p className="hero-script"><span className="visually-hidden">Cakes</span><span className="hero-cakes-mobile" aria-hidden="true">Cakes</span><picture aria-hidden="true"><img src="/assets/hero-cakes-uppercase.png" alt="" /></picture></p></div>
       </div>
-      <div className="hero-reveal hero-reveal-actions"><div className="hero-actions"><HeroButton href="#occasions">Explore our cakes</HeroButton><HeroButton href="#cake-curator" light>Request custom cake</HeroButton></div></div>
+      <div className="hero-reveal hero-reveal-actions"><div className="hero-actions"><HeroButton>Explore our cakes</HeroButton><HeroButton light>Request custom cake</HeroButton></div></div>
     </div>
     <div className="hero-pagination" role="group" aria-label="Hero slides">{heroSlides.map((slide, index) => <button key={slide.src} type="button" aria-label={"Show slide " + (index + 1) + ": " + slide.alt} aria-current={index === active ? "true" : undefined} onClick={() => selectSlide(index)} />)}</div>
     <a href="#metrics" className="scroll-cue" aria-label="Scroll to the next section"><img src="/assets/hero-progress.svg" alt="" /></a>

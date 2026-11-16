@@ -22,7 +22,9 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
   const [moving, setMoving] = useState(false);
   const viewport = useRef(null);
   const track = useRef(null);
-  const motion = useRef({ position: count + initialIndex, step: 0, alignment: 0, frame: 0, queue: [], moving: false });
+  const motion = useRef({ position: count + initialIndex, step: 0, alignment: 0, frame: 0, queue: [], moving: false, dragging: false, from: null, velocity: 0, direction: 0 });
+  const gesture = useRef(null);
+  const suppressClick = useRef(false);
   const automatic = useMobileReveal(viewport, { selector: '.best-card.is-main', resetKey: index, enabled: !moving });
   const revealed = moving ? null : hovered ?? focused ?? touched ?? (automatic.active ? Number(automatic.active.dataset.slide) : null);
   const reduced = useReducedMotion();
@@ -36,6 +38,9 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
       cancelAnimationFrame(state.frame);
       state.position += state.moving ? state.direction : 0;
       state.moving = false;
+      state.dragging = false;
+      state.from = null;
+      gesture.current = null;
       state.queue = [];
       setMoving(false);
       state.position = count + ((state.position % count) + count) % count;
@@ -71,8 +76,12 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
       const by = state.queue.shift();
       state.direction = by;
       const keepFocus = track.current.contains(document.activeElement) && document.activeElement.matches(':focus-visible');
-      const from = -state.position * state.step + state.alignment;
+      const dragged = state.from !== null;
+      const from = state.from ?? -state.position * state.step + state.alignment;
       const to = -(state.position + by) * state.step + state.alignment;
+      const velocity = state.velocity;
+      state.from = null;
+      state.velocity = 0;
       const finish = () => {
         state.position = count + ((state.position + by) % count + count) % count;
         // Rebase to an identical copy at the same visible position.
@@ -97,7 +106,13 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
         if (matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }
         const elapsed = (now - started) / 1000;
         let progress;
-        if (elapsed < .085) {
+        if (dragged) {
+          // Continue from the finger's exact position and release velocity.
+          if (elapsed >= .65) { finish(); return; }
+          const w = 20, damping = .9, wd = w * Math.sqrt(1 - damping * damping);
+          const v = Math.abs(to - from) > 1 ? Math.max(-20, Math.min(20, velocity * 1000 / (to - from))) : 0;
+          progress = 1 - Math.exp(-damping * w * elapsed) * (Math.cos(wd * elapsed) + (damping * w - v) / wd * Math.sin(wd * elapsed));
+        } else if (elapsed < .085) {
           const t = elapsed / .085;
           progress = -resistance * t * t * (3 - 2 * t);
         } else {
@@ -113,19 +128,62 @@ export default function BestSellers({ items = cakes, id = 'best-sellers', eyebro
     };
     advance();
   };
-  const touch = useRef(null);
+  const pointerDown = event => {
+    suppressClick.current = false;
+    if (event.pointerType === 'mouse' || !event.isPrimary || !matchMedia('(max-width: 760px)').matches) return;
+    gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, lastX: event.clientX, time: event.timeStamp, velocity: 0, dragging: false, target: event.target };
+  };
+  const pointerMove = event => {
+    const g = gesture.current;
+    if (!g || g.id !== event.pointerId) return;
+    const dx = event.clientX - g.x, dy = event.clientY - g.y;
+    if (!g.dragging) {
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 8) return;
+      if (Math.abs(dy) >= Math.abs(dx)) { gesture.current = null; return; }
+      const state = motion.current;
+      cancelAnimationFrame(state.frame);
+      g.from = new DOMMatrixReadOnly(getComputedStyle(track.current).transform).m41;
+      g.base = Math.round((state.alignment - g.from) / state.step);
+      state.position = g.base;
+      state.direction = 0;
+      state.queue = [];
+      state.dragging = state.moving = g.dragging = true;
+      setMoving(true); setHovered(null); setFocused(null); setTouched(null); automatic.dismiss();
+      viewport.current.setPointerCapture(event.pointerId);
+    }
+    const dt = event.timeStamp - g.time;
+    if (dt > 0) g.velocity = .35 * g.velocity + .65 * Math.max(-2.5, Math.min(2.5, (event.clientX - g.lastX) / dt));
+    g.lastX = event.clientX; g.time = event.timeStamp;
+    g.offset = g.from + dx;
+    track.current.style.transform = `translate3d(${g.offset}px,0,0)`;
+  };
+  const pointerEnd = (event, cancelled = false) => {
+    const g = gesture.current;
+    if (!g || g.id !== event.pointerId) return;
+    gesture.current = null;
+    if (g.dragging) {
+      suppressClick.current = true;
+      const state = motion.current;
+      const velocity = cancelled || event.timeStamp - g.time > 100 ? 0 : g.velocity;
+      const projected = (state.alignment - g.offset - velocity * 140) / state.step;
+      const target = Math.max(g.base - 2, Math.min(g.base + 2, Math.round(projected)));
+      state.from = g.offset;
+      state.velocity = velocity;
+      state.dragging = state.moving = false;
+      state.queue = [];
+      move(target - g.base);
+    } else if (!cancelled && !motion.current.moving && !g.target.closest('a')) {
+      const card = g.target.closest('[data-slide]');
+      if (card) { const n = Number(card.dataset.slide); automatic.dismiss(); setTouched(revealed === n ? null : n); }
+    }
+    if (viewport.current.hasPointerCapture(event.pointerId)) viewport.current.releasePointerCapture(event.pointerId);
+  };
   return <section id={id} className={`best-sellers section-wrap${mirror ? ' newest-releases' : ''}${moving ? ' is-moving' : ''}`} aria-labelledby={`${id}-title`} aria-roledescription="carousel">
     <div className="best-sellers-intro"><div className="section-eyebrow"><picture aria-hidden="true"><source media="(max-width: 760px)" srcSet="/assets/about-marker-mobile.svg" /><img src="/assets/bestseller-marker.svg" alt="" /></picture>{eyebrow}</div><DisplayHeading id={`${id}-title`} name={headingName} mobileSrc={mirror ? `/assets/title-${headingName}-desktop.png` : undefined}>{title}</DisplayHeading>
       <div className="slider-controls"><button type="button" className="round-arrow arrow-back" onClick={() => move(-1)} aria-label="Previous cakes"><img src="/assets/icon-chevron.svg" alt="" /></button><button type="button" className="round-arrow" onClick={() => move(1)} aria-label="Next cakes"><img src="/assets/icon-chevron.svg" alt="" /></button></div>
     </div>
-    <div className="best-sellers-viewport" ref={viewport} onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1); } }} onTouchStart={event => { touch.current = { x: event.touches[0].clientX, y: event.touches[0].clientY }; }} onTouchEnd={event => {
-      if (!touch.current) return;
-      const dx = event.changedTouches[0].clientX - touch.current.x;
-      const dy = event.changedTouches[0].clientY - touch.current.y;
-      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) move(dx < 0 ? 1 : -1);
-      touch.current = null;
-    }}>
-      <div className="best-sellers-track" ref={track}>{slides.map((cake, physicalIndex) => <article className={`best-card${physicalIndex === count + index ? ' is-main' : ''}${revealed === physicalIndex ? ' is-revealed' : ''}`} data-slide={physicalIndex} key={physicalIndex} tabIndex={physicalIndex === count + index ? 0 : -1} aria-hidden={physicalIndex < count || physicalIndex >= count * 2 ? true : undefined} aria-label={cake.name} onPointerEnter={event => { if (event.pointerType !== 'touch' && !motion.current.moving) { setHovered(physicalIndex); setFocused(null); setTouched(null); } }} onPointerLeave={() => setHovered(current => current === physicalIndex ? null : current)} onFocus={event => { if (!motion.current.moving && event.target.matches(':focus-visible')) setFocused(physicalIndex); }} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(current => current === physicalIndex ? null : current); }} onPointerDown={event => { if (event.pointerType === 'touch' && !event.target.closest('a') && !motion.current.moving) { automatic.dismiss(); setTouched(revealed === physicalIndex ? null : physicalIndex); } }}>
+    <div className="best-sellers-viewport" ref={viewport} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={event => pointerEnd(event)} onPointerCancel={event => pointerEnd(event, true)} onClickCapture={event => { if (suppressClick.current && event.detail > 0) { event.preventDefault(); event.stopPropagation(); } suppressClick.current = false; }} onDragStart={event => event.preventDefault()} onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1); } }}>
+      <div className="best-sellers-track" ref={track}>{slides.map((cake, physicalIndex) => <article className={`best-card${physicalIndex === count + index ? ' is-main' : ''}${revealed === physicalIndex ? ' is-revealed' : ''}`} data-slide={physicalIndex} key={physicalIndex} tabIndex={physicalIndex === count + index ? 0 : -1} aria-hidden={physicalIndex < count || physicalIndex >= count * 2 ? true : undefined} aria-label={cake.name} onPointerEnter={event => { if (event.pointerType !== 'touch' && !motion.current.moving) { setHovered(physicalIndex); setFocused(null); setTouched(null); } }} onPointerLeave={() => setHovered(current => current === physicalIndex ? null : current)} onFocus={event => { if (!motion.current.moving && event.target.matches(':focus-visible')) setFocused(physicalIndex); }} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(current => current === physicalIndex ? null : current); }}>
         <SiteImage src={cake.image} mobileSrc={cake.mobileImage} alt={cake.name} />
         <div className="best-card-details"><p>{cake.name}</p><CollectionLink name={cake.name} tabIndex={physicalIndex >= count && physicalIndex < count * 2 && (physicalIndex === count + index || revealed === physicalIndex) ? 0 : -1} /></div>
       </article>)}</div>

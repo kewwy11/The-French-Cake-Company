@@ -13,6 +13,7 @@ import Testimonial from './components/Testimonial.jsx';
 import Bakers from './components/Bakers.jsx';
 import FAQNewsletter from './components/FAQNewsletter.jsx';
 import Footer from './components/Footer.jsx';
+import SignupPopup from './components/SignupPopup.jsx';
 
 export default function App() {
   const [ready, setReady] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -27,5 +28,6 @@ export default function App() {
     </main>
     <Footer />
     </div>
+    <SignupPopup ready={ready} />
   </>;
 }

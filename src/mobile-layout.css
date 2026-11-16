@@ -9,7 +9,6 @@ button, a { touch-action: manipulation; }
 
 @media (max-width: 760px) {
   .opening-title { display: flex; gap: 5px; }
-  .opening-photo { display: none; }
   .opening-line:first-child img, .opening-line:last-child img { width: 216px; height: 24px; }
 
   /* The mobile hero uses its own type, icon strokes, and image crop. */
@@ -66,7 +65,7 @@ button, a { touch-action: manipulation; }
   .best-sellers .round-arrow:not(.arrow-back) img { transform: rotate(-90deg); }
   .best-sellers .round-arrow.arrow-back:is(:hover,:focus-visible) img { translate: 0 -3px; }
   .best-sellers .round-arrow:not(.arrow-back):is(:hover,:focus-visible) img { translate: 0 3px; }
-  .best-sellers-viewport { width: calc(100% + 20px); flex: 0 0 auto; height: 437px; }
+  .best-sellers-viewport { width: calc(100% + 20px); flex: 0 0 auto; height: 437px; touch-action: pan-y pinch-zoom; user-select: none; }
   .best-sellers-track { height: 437px; gap: 10px; }
   .best-card, .best-card:nth-child(2) { flex: 0 0 min(325px,calc(100vw - 40px)); height: 437px; }
   .newest-releases .best-sellers-intro, .newest-releases .best-sellers-viewport { order: initial; }
@@ -137,6 +136,7 @@ button, a { touch-action: manipulation; }
   .reviewer span { font-size: 11px; }
   .testimonial-heading .slider-controls { display: flex; bottom: 32px; gap: 9px; }
   .testimonial-heading .round-arrow { width: 67.5px; height: 67.5px; border-width: .563px; }
+  .testimonial-heading .round-arrow img { width: 18px; height: 18px; }
 
   .bakers { padding-inline: 24px; }
   .bakers-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; height: 117px; margin: 0 0 24px; }
@@ -144,7 +144,7 @@ button, a { touch-action: manipulation; }
   .bakers-heading .display-heading { margin: 0; }
   .bakers-heading .display-heading { height: 82px; width: 100%; }
   .bakers-heading .display-heading img { width: 342px; max-width: 100%; }
-  .baker-gallery { display: block; width: calc(100% + 24px); }
+  .baker-gallery { display: block; width: 100%; }
   .baker-track { gap: 10px; }
   .baker-card, .baker-card:nth-child(3) { flex-basis: min(325px,calc(100vw - 48px)); width: min(325px,calc(100vw - 48px)); }
   .baker-details span { font-size: 14px; }

@@ -3,6 +3,7 @@ import SiteImage from './SiteImage.jsx';
 import DisplayHeading from './DisplayHeading.jsx';
 import { RollingLabel, RollingArrow } from './ButtonMotion.jsx';
 import useMobileReveal from '../hooks/useMobileReveal.js';
+import { CTA_URL } from '../cta.js';
 
 const occasions = [
   ['Weddings', '/assets/occasion-weddings.png', '/assets/occasion-weddings-mobile.png', 'wedding'],
@@ -28,7 +29,7 @@ export default function Occasions() {
       onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(null); }}>
       <div className="occasion-visual"><SiteImage src={image} mobileSrc={mobileImage} alt={`${name} cake`} className={`occasion-image ${mood}`} />
         <button type="button" className="occasion-toggle" aria-label={`Preview ${name} collection`} aria-expanded={active === index} onClick={() => { automatic.dismiss(); setHovered(null); setFocused(null); setSelected(active === index ? null : index); }} />
-        <a href="#cake-curator" className="occasion-cta button button-dark" tabIndex={active === index ? 0 : -1} aria-label={`Explore ${name} collection`}><RollingLabel>Explore collection</RollingLabel><RollingArrow /></a>
+        <a href={CTA_URL} className="occasion-cta button button-dark" tabIndex={active === index ? 0 : -1} aria-label={`Explore ${name} collection`}><RollingLabel>Explore collection</RollingLabel><RollingArrow /></a>
       </div><span>{name}</span>
     </article>)}</div>
   </section>;

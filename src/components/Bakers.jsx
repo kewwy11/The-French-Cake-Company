@@ -4,10 +4,10 @@ import DisplayHeading from './DisplayHeading.jsx';
 import useReducedMotion from '../hooks/useReducedMotion.js';
 import { BAKER_CARD_DURATION, bakerPullProgress } from '../baker-motion.js';
 const bakers = [
-  ['/assets/baker-one.png', 'The pastry chef at work', 'The pastry chef', 'French pastry & patisserie', 'Pastry'],
-  ['/assets/baker-two.png', 'A member of our atelier team', 'The celebration baker', 'Celebration cakes', 'Cakes'],
-  ['/assets/baker-three.png', 'A baker decorating a cake', 'The cake artist', 'Buttercream & sugar flowers', 'Design'],
-  ['/assets/baker-four.png', 'A baker in the atelier', 'The finishing hand', 'Finishing touches', 'Details'],
+  ['/assets/baker-one.png', 'Jose Denoso in the atelier', 'Jose Denoso', 'Chief Connoisseur', '15 years'],
+  ['/assets/baker-two.png', 'A member of our atelier team', 'Jose Denoso', 'Chief Connoisseur', '15 years'],
+  ['/assets/baker-three.png', 'A baker decorating a cake', 'Jose Denoso', 'Chief Connoisseur', '15 years'],
+  ['/assets/baker-four.png', 'A baker in the atelier', 'Jose Denoso', 'Chief Connoisseur', '15 years'],
 ];
 export default function Bakers() {
   const gallery = useRef(null);
