@@ -1,5 +1,5 @@
 .signup-popup { width: 966px; max-width: calc(100vw - 40px); max-height: calc(100dvh - 32px); margin: auto; padding: 0; border: 0; outline: none; background: var(--brown); color: var(--rose); overflow: auto; overscroll-behavior: contain; }
-.signup-popup::backdrop { background: rgb(25 14 10 / .5); }
+.signup-popup::backdrop { background: rgb(25 14 10 / .5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 .signup-card { position: relative; display: grid; grid-template-columns: 1fr 1fr; min-height: 581px; }
 .signup-photos { grid-column: 1; grid-row: 1; min-height: 581px; }
 .signup-content { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 24px; min-width: 0; padding: 32px; }

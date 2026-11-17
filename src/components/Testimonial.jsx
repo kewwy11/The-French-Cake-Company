@@ -63,7 +63,7 @@ export default function Testimonial() {
   }, [slide.sequence, slide.previous, reduced]);
   return <section ref={section} className="testimonial section-wrap">
     <div className="testimonial-heading">
-      <div><div className="section-eyebrow"><i />The cake curator</div><DisplayHeading name="testimonial">The proof is in the celebration</DisplayHeading></div>
+      <div><div className="section-eyebrow"><i />How did our customers feel</div><DisplayHeading name="testimonial">The proof is in the celebration</DisplayHeading></div>
       <div className="slider-controls"><button type="button" className="round-arrow arrow-back" aria-label="Previous story" onClick={() => move(-1)}><img src="/assets/icon-chevron.svg" alt="" /></button><button type="button" className="round-arrow" aria-label="Next story" onClick={() => move(1)}><img src="/assets/icon-chevron.svg" alt="" /></button></div>
     </div>
     <div className="testimonial-stage" aria-roledescription="carousel" aria-label="Customer celebrations">

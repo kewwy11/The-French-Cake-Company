@@ -5,9 +5,9 @@ import useReducedMotion from '../hooks/useReducedMotion.js';
 import { BAKER_CARD_DURATION, bakerPullProgress } from '../baker-motion.js';
 const bakers = [
   ['/assets/baker-one.png', 'Jose Denoso in the atelier', 'Jose Denoso', 'Chief Connoisseur', '15 years'],
-  ['/assets/baker-two.png', 'A member of our atelier team', 'Jose Denoso', 'Chief Connoisseur', '15 years'],
-  ['/assets/baker-three.png', 'A baker decorating a cake', 'Jose Denoso', 'Chief Connoisseur', '15 years'],
-  ['/assets/baker-four.png', 'A baker in the atelier', 'Jose Denoso', 'Chief Connoisseur', '15 years'],
+  ['/assets/baker-two.png', 'A member of our atelier team', 'Camille Laurent', 'Celebration Cake Baker', '8 years'],
+  ['/assets/baker-three.png', 'A baker decorating a cake', 'Amara Okafor', 'Cake Artist', '6 years'],
+  ['/assets/baker-four.png', 'A baker in the atelier', 'Daniel Moreau', 'Pastry Chef', '4 years'],
 ];
 export default function Bakers() {
   const gallery = useRef(null);
